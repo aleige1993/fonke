@@ -1,0 +1,497 @@
+<script src="#(ossPath)/static/carMap/res/js/jquery-2.1.1.js"></script>
+<script src="#(ossPath)/static/carMap/res/js/bootstrap.min.js"></script>
+<script src="#(ossPath)/static/carMap/res/js/inspinia.js"></script>
+
+<script src="#(ossPath)/static/carMap/res/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="#(ossPath)/static/carMap/res/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="#(ossPath)/static/carMap/res/js/plugins/footable/footable.all.min.js"></script>
+<script src="#(ossPath)/static/carMap/res/js/plugins/toastr/toastr.min.js"></script>
+<!-- table选择列插件 -->
+<script src="#(ossPath)/static/carMap/res/js/plugins/laydate/laydate.js"></script>
+<!-- Ladda -->
+<script src="#(ossPath)/static/carMap/res/js/plugins/ladda/ladda.min.js"></script>
+<script src="#(ossPath)/static/carMap/res/js/plugins/ladda/ladda.jquery.min.js"></script>
+
+
+<script src="#(ossPath)/static/carMap/res/js/jquery.form.js"></script>
+
+<!-- layer -->
+<script src="#(ossPath)/static/carMap/res/js/plugins/layer/layer.js"></script>
+
+<script>
+/** 
+模板引擎 #更改为@
+*/
+;!function(){"use strict";var f,b={open:"{{",close:"}}"},c={exp:function(a){return new RegExp(a,"g")},query:function(a,c,e){var f=["@([\\s\\S])+?","([^{@}])*?"][a||0];return d((c||"")+b.open+f+b.close+(e||""))},escape:function(a){return String(a||"").replace(/&(?!#?[a-zA-Z0-9]+;)/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/'/g,"&#39;").replace(/"/g,"&quot;")},error:function(a,b){var c="Laytpl Error：";return"object"==typeof console&&console.error(c+a+"\n"+(b||"")),c+a}},d=c.exp,e=function(a){this.tpl=a};e.pt=e.prototype,e.pt.parse=function(a,e){var f=this,g=a,h=d("^"+b.open+"@",""),i=d(b.close+"$","");a=a.replace(/[\r\t\n]/g," ").replace(d(b.open+"@"),b.open+"@ ").replace(d(b.close+"}"),"} "+b.close).replace(/\\/g,"\\\\").replace(/(?="|')/g,"\\").replace(c.query(),function(a){return a=a.replace(h,"").replace(i,""),'";'+a.replace(/\\/g,"")+'; view+="'}).replace(c.query(1),function(a){var c='"+(';return a.replace(/\s/g,"")===b.open+b.close?"":(a=a.replace(d(b.open+"|"+b.close),""),/^=/.test(a)&&(a=a.replace(/^=/,""),c='"+_escape_('),c+a.replace(/\\/g,"")+')+"')}),a='"use strict";var view = "'+a+'";return view;';try{return f.cache=a=new Function("d, _escape_",a),a(e,c.escape)}catch(j){return delete f.cache,c.error(j,g)}},e.pt.render=function(a,b){var e,d=this;return a?(e=d.cache?d.cache(a,c.escape):d.parse(d.tpl,a),b?(b(e),void 0):e):c.error("no data")},f=function(a){return"string"!=typeof a?c.error("Template not found"):new e(a)},f.config=function(a){a=a||{};for(var c in a)b[c]=a[c]},f.v="1.1","function"==typeof define?define(function(){return f}):"undefined"!=typeof exports?module.exports=f:window.laytpl=f}();
+
+$(function(){
+	laydate.skin('molv');
+	regToolTip();
+	//注册全选的点击事件
+	regCheckboxClick();
+});//tooltip的插件
+/**
+ * 注册全选事件
+ */
+function regCheckboxClick(){
+	var checked =$('#checkAllBox').is(':checked');
+	$("#checkAllBox").click(function(){
+		if(!checked){
+			$("[name=DataTableCheckBox]:checkbox").each(function(){
+				$(this)[0].checked=true;
+			});
+			checked=true;
+		}else{
+			$("[name=DataTableCheckBox]:checkbox").each(function(){
+				$(this)[0].checked=false;
+			});
+			checked=false;
+		}
+	});
+}
+function showSuc(msg) {
+	var m = "操作成功！";
+	if (msg != null && msg != undefined) {
+		m = msg;
+	}
+	toastr.options = {
+		"closeButton" : true,
+		"debug" : false,
+		"progressBar" : true,
+		"preventDuplicates" : false,
+		"positionClass" : "toast-bottom-right",
+		"onclick" : null,
+		"showDuration" : "400",
+		"hideDuration" : "1000",
+		"timeOut" : "4000",
+		"extendedTimeOut" : "1000",
+		"showEasing" : "swing",
+		"hideEasing" : "linear",
+		"showMethod" : "fadeIn",
+		"hideMethod" : "fadeOut"
+	};
+	toastr["success"](m);
+}
+function showErr(msg) {
+	var m = "操作失败！";
+	if (msg != null && msg != undefined) {
+		m = msg;
+	}
+	toastr.options = {
+		"closeButton" : true,
+		"debug" : false,
+		"progressBar" : true,
+		"preventDuplicates" : false,
+		"positionClass" : "toast-bottom-right",
+		"onclick" : null,
+		"showDuration" : "400",
+		"hideDuration" : "1000",
+		"timeOut" : "3000",
+		"extendedTimeOut" : "1000",
+		"showEasing" : "swing",
+		"hideEasing" : "linear",
+		"showMethod" : "fadeIn",
+		"hideMethod" : "fadeOut"
+	};
+	toastr["error"](m);
+}
+function getValue(v) {
+	if ("null" == v || null == v) {
+		return "";
+	} else {
+			return v;
+	}
+}
+function checkResult(data) {
+	if (typeof (data.result) != "undefined") {
+		if (data.result.resultCode == 3) {
+			alert("您的会话已经超时,请重试!");
+			window.location.reload(true);
+			window.parent.location.reload(true);
+			return false;
+		} else if (data.result.resultCode == 2) {
+			showErr(data.result.resultMessage);
+			return false;
+		} else if (data.result.resultCode == 1) {
+			showErr('系统繁忙，请稍后再试！ ');
+			return false;
+		} else if (data.result.resultCode == 0) {
+			return true;
+		}
+	} else {
+		return true;
+	}
+}
+function handlePage(page,total){
+	var len=3;//左右各三个;
+	var firstHtml="<li class=\"footable-page-arrow "+((page<=1)?("disabled"):(""))+"\"><a  href=\"javascript:"+((page<=1)?("void(0);"):("query("+(1)+")"))+"\"> « </a></li>\n" ;
+	var preHtml="<li class=\"footable-page-arrow "+((page<=1)?("disabled"):(""))+"\"><a href=\"javascript:"+((page<=1)?("void(0);"):("query("+(page-1)+")"))+"\"> ‹ </a></li>\n";
+	var nextHtml="<li class=\"footable-page-arrow "+((page>=total)?("disabled"):(""))+"\"><a  href=\"javascript:"+((page>=total)?("void(0);"):("query("+(page+1)+")"))+"\"> › </a></li>\n" ;
+	var lastHtml="<li class=\"footable-page-arrow "+((page>=total)?("disabled"):(""))+"\"><a  href=\"javascript:"+((page>=total)?("void(0);"):("query("+total+")"))+"\"> » </a></li>";
+	var loopHtml="";
+	if(page>1){
+		for(var i=(page-len<=0)?(1):(page-len),index=0;index<len&&i<page;index++,i++){
+			loopHtml+="<li class=\"footable-page "+((page==i)?("active"):(""))+"\"><a data-page=\"0\" href=\"javascript:query("+i+")\"> "+i+" </a></li>\n";
+		}
+	}
+	loopHtml+="<li class=\"footable-page active\"><a data-page=\"0\" href=\"javascript:void(0)\"> "+page+" </a></li>\n";
+	if(page>=1){
+		for(var i=(page+len>total)?(page+1):(page+1),index=0;index<len&&i<=total;index++,i++){
+			loopHtml+="<li class=\"footable-page "+((page==i)?("active"):(""))+"\"><a data-page=\"0\" href=\"javascript:query("+i+")\"> "+i+" </a></li>\n";
+		}
+	}
+	var HTML= firstHtml+preHtml+loopHtml+nextHtml+lastHtml;
+	$("#datapage").html(HTML);
+}
+
+function handlePage(page,total,totalNum){
+	var len=3;//左右各三个;
+	var dataTotalNum="<li class=\"footable-page-arrow\"><span> 共"+totalNum+"条 </span></li>\n" ;
+	var firstHtml="<li class=\"footable-page-arrow "+((page<=1)?("disabled"):(""))+"\"><a  href=\"javascript:"+((page<=1)?("void(0);"):("query("+(1)+")"))+"\"> « </a></li>\n" ;
+	var preHtml="<li class=\"footable-page-arrow "+((page<=1)?("disabled"):(""))+"\"><a href=\"javascript:"+((page<=1)?("void(0);"):("query("+(page-1)+")"))+"\"> ‹ </a></li>\n";
+	var nextHtml="<li class=\"footable-page-arrow "+((page>=total)?("disabled"):(""))+"\"><a  href=\"javascript:"+((page>=total)?("void(0);"):("query("+(page+1)+")"))+"\"> › </a></li>\n" ;
+	var lastHtml="<li class=\"footable-page-arrow "+((page>=total)?("disabled"):(""))+"\"><a  href=\"javascript:"+((page>=total)?("void(0);"):("query("+total+")"))+"\"> » </a></li>";
+	var loopHtml="";
+	if(page>1){
+		for(var i=(page-len<=0)?(1):(page-len),index=0;index<len&&i<page;index++,i++){
+			loopHtml+="<li class=\"footable-page "+((page==i)?("active"):(""))+"\"><a data-page=\"0\" href=\"javascript:query("+i+")\"> "+i+" </a></li>\n";
+		}
+	}
+	loopHtml+="<li class=\"footable-page active\"><a data-page=\"0\" href=\"javascript:void(0)\"> "+page+" </a></li>\n";
+	if(page>=1){
+		for(var i=(page+len>total)?(page+1):(page+1),index=0;index<len&&i<=total;index++,i++){
+			loopHtml+="<li class=\"footable-page "+((page==i)?("active"):(""))+"\"><a data-page=\"0\" href=\"javascript:query("+i+")\"> "+i+" </a></li>\n";
+		}
+	}
+	var HTML= dataTotalNum+firstHtml+preHtml+loopHtml+nextHtml+lastHtml;
+	$("#datapage").html(HTML);
+}
+
+function orderHandlePage(page,total,totalNum,pageSize){
+	console.info(page+"  "+ total+"  "+totalNum);
+	var len=3;//左右各三个;
+	var dataTotalNum="<li class=\"footable-page-arrow\"><span> 共"+totalNum+"条 </span></li>\n" ;
+	var localPageNum=0;
+	if(page!=total){
+		localPageNum = pageSize;
+	}else{
+		localPageNum = totalNum - (total-1) * pageSize;
+	}
+	var localPageNum="<li class=\"footable-page-arrow\"><span> 当前页"+localPageNum+"条 </span></li>\n" ;
+	var firstHtml="<li class=\"footable-page-arrow "+((page<=1)?("disabled"):(""))+"\"><a  href=\"javascript:"+((page<=1)?("void(0);"):("query("+(1)+")"))+"\"> « </a></li>\n" ;
+	var preHtml="<li class=\"footable-page-arrow "+((page<=1)?("disabled"):(""))+"\"><a href=\"javascript:"+((page<=1)?("void(0);"):("query("+(page-1)+")"))+"\"> ‹ </a></li>\n";
+	var nextHtml="<li class=\"footable-page-arrow "+((page>=total)?("disabled"):(""))+"\"><a  href=\"javascript:"+((page>=total)?("void(0);"):("query("+(page+1)+")"))+"\"> › </a></li>\n" ;
+	var lastHtml="<li class=\"footable-page-arrow "+((page>=total)?("disabled"):(""))+"\"><a  href=\"javascript:"+((page>=total)?("void(0);"):("query("+total+")"))+"\"> » </a></li>";
+	var loopHtml="";
+	if(page>1){
+		for(var i=(page-len<=0)?(1):(page-len),index=0;index<len&&i<page;index++,i++){
+			loopHtml+="<li class=\"footable-page "+((page==i)?("active"):(""))+"\"><a data-page=\"0\" href=\"javascript:query("+i+")\"> "+i+" </a></li>\n";
+		}
+	}
+	loopHtml+="<li class=\"footable-page active\"><a data-page=\"0\" href=\"javascript:void(0)\"> "+page+" </a></li>\n";
+	if(page>=1){
+		for(var i=(page+len>total)?(page+1):(page+1),index=0;index<len&&i<=total;index++,i++){
+			loopHtml+="<li class=\"footable-page "+((page==i)?("active"):(""))+"\"><a data-page=\"0\" href=\"javascript:query("+i+")\"> "+i+" </a></li>\n";
+		}
+	}
+	var HTML= dataTotalNum + localPageNum + firstHtml + preHtml + loopHtml + nextHtml + lastHtml;
+	$("#datapage").html(HTML);
+}
+
+function handlePageForLog(page,total,totalNum){
+	var len=3;//左右各三个;
+	var dataTotalNum="<li class=\"footable-page-arrow\"><span> 共"+totalNum+"条数据 </span></li>\n" ;
+	var firstHtml="<li class=\"footable-page-arrow "+((page<=1)?("disabled"):(""))+"\"><a  href=\"javascript:"+((page<=1)?("void(0);"):("getOrderLogs("+(1)+")"))+"\"> « </a></li>\n" ;
+	var preHtml="<li class=\"footable-page-arrow "+((page<=1)?("disabled"):(""))+"\"><a href=\"javascript:"+((page<=1)?("void(0);"):("getOrderLogs("+(page-1)+")"))+"\"> ‹ </a></li>\n";
+	var nextHtml="<li class=\"footable-page-arrow "+((page>=total)?("disabled"):(""))+"\"><a  href=\"javascript:"+((page>=total)?("void(0);"):("getOrderLogs("+(page+1)+")"))+"\"> › </a></li>\n" ;
+	var lastHtml="<li class=\"footable-page-arrow "+((page>=total)?("disabled"):(""))+"\"><a  href=\"javascript:"+((page>=total)?("void(0);"):("getOrderLogs("+total+")"))+"\"> » </a></li>";
+	var loopHtml="";
+	if(page>1){
+		for(var i=(page-len<=0)?(1):(page-len),index=0;index<len&&i<page;index++,i++){
+			loopHtml+="<li class=\"footable-page "+((page==i)?("active"):(""))+"\"><a data-page=\"0\" href=\"javascript:getOrderLogs("+i+")\"> "+i+" </a></li>\n";
+		}
+	}
+	loopHtml+="<li class=\"footable-page active\"><a data-page=\"0\" href=\"javascript:void(0)\"> "+page+" </a></li>\n";
+	if(page>=1){
+		for(var i=(page+len>total)?(page+1):(page+1),index=0;index<len&&i<=total;index++,i++){
+			loopHtml+="<li class=\"footable-page "+((page==i)?("active"):(""))+"\"><a data-page=\"0\" href=\"javascript:getOrderLogs("+i+")\"> "+i+" </a></li>\n";
+		}
+	}
+	var HTML= dataTotalNum+firstHtml+preHtml+loopHtml+nextHtml+lastHtml;
+	$("#logDatapage").html(HTML);
+}
+
+function Map() {
+    this.container = new Object();
+}
+
+Map.prototype.put = function(key, value) {
+    this.container[key] = value;
+}
+
+Map.prototype.get = function(key) {
+    return this.container[key];
+}
+
+Map.prototype.keySet = function() {
+    var keyset = new Array();
+    var count = 0;
+    for (var key in this.container) {
+        // 跳过object的extend函数
+        if (key == 'extend') {
+            continue;
+        }
+        keyset[count] = key;
+        count++;
+    }
+    return keyset;
+}
+
+Map.prototype.size = function() {
+    var count = 0;
+    for (var key in this.container) {
+        // 跳过object的extend函数
+        if (key == 'extend') {
+            continue;
+        }
+        count++;
+    }
+    return count;
+}
+
+Map.prototype.remove = function(key) {
+    delete this.container[key];
+}
+
+Map.prototype.toString = function() {
+    var str = "";
+    for (var i = 0,
+    keys = this.keySet(), len = keys.length; i < len; i++) {
+        str = str + keys[i] + "=" + this.container[keys[i]] + ";\n";
+    }
+    return str;
+}
+function parseForm(id) {
+	var param = {};
+	$("#" + id).find("[name]").each(function() {
+		var name = $(this).attr("name");
+		var value = $(this).val();
+		var obj = $(this)[0];
+		var type = obj.type;
+		if (type)
+			type = type.toLowerCase();
+		if (type == "button" || type == "submit" || type == "reset") {
+			return;// 实现 continue 功能, returnfalse 是break
+		}
+		if (type == "checkbox" || type == "radio") {
+			if (obj.checked) {
+				param[obj.name] = 1;
+			} else {
+				param[obj.name] = 0;
+			}
+		} else {
+			param[name] = value;
+		}
+	});
+	return param;
+}
+var BTN_LOADING_MAP=new Map();
+function loading(id){
+	if(isExist(id)){
+		var btn= $('#'+id).ladda();
+		BTN_LOADING_MAP.put(id,btn);
+		btn.ladda("start");
+		//加载进度超时.
+		setTimeout(function() {
+			btn.ladda("stop");
+			BTN_LOADING_MAP.remove(id);
+		}, 20*1000);//最多二十秒
+	}else{//全局遮蔽
+		showOverlay();
+	}
+}
+function unloading(id){
+	try{
+		if(isExist(id)){
+			BTN_LOADING_MAP.get(id).ladda("stop");
+		}else{
+			//hideOverlay();
+		}
+	}catch(e){
+		console.log(e);
+	}
+}
+
+//用于确认
+function queren(title, text, fn) {
+    swal({
+        title: title,
+        text: text,
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "确认",
+        cancelButtonText: '取消',
+        closeOnConfirm: true,
+        html: true
+    },
+    function(isConfirm) {
+        if (isConfirm) {
+            if (typeof(eval(fn)) == "function") {
+                fn();
+            }
+        }
+    });
+}
+var paramsTransfer = function (param, key, encode) {
+	if (param == null)
+			return '';
+		var paramStr = '';
+		var t = typeof (param);
+		if (t == 'string' || t == 'number' || t == 'boolean') {
+			paramStr += '&' + key + '=' + ((encode == null || encode) ? encodeURIComponent(param) : param);
+		} else {
+			for ( var i in param) {
+				var k = key == null ? i : key + (param instanceof Array ? '[' + i + ']' : '.' + i);
+				paramStr += paramsTransfer(param[i], k, encode);
+			}
+		}
+		return paramStr;
+	};
+	
+	
+	function changeBrand(value,id,defaultValue) {
+		var html = "<option value=''>请选择车系</option>";
+		if(getValue(value)==""){
+			$("#"+id).html(html);
+			return;
+		}
+		$.post(WEBROOT + '/getSeriesList', {
+			brandid : value
+		}, function(data, textsataus) {
+			if (checkResult(data)) {
+				
+				for (var i = 0; i < data.entity.length; i++) {
+					html += "<option value="+data.entity[i].SERIESID+">" + data.entity[i].FIRSTLETTER + " " + data.entity[i].NAME + "</option>";
+				}
+				$("#"+id).html(html);
+				if(defaultValue){
+					$("#"+id).val(defaultValue);
+				}
+			}
+		});
+	}
+	function changeSeries(value,id,defaultValue) {
+		var html = "<option value=''>请选择车型</option>";
+		if(getValue(value)==""){
+			$("#"+id).html(html);
+			return;
+		}
+		$.post(WEBROOT + '/getVMList', {
+			seriesid :value
+		}, function(data, textsataus) {
+			if (checkResult(data)) {
+				for (var i = 0; i < data.entity.length; i++) {
+					html += "<option value="+data.entity[i].VEHICLEMODELID+">" + data.entity[i].NAME + "</option>";
+				}
+				$("#"+id).html(html);
+				if(defaultValue){
+					$("#"+id).val(defaultValue);
+				}
+			}
+		});
+	}
+
+
+
+function regToolTip(){
+	$("[data-toggle='tooltip']").tooltip(); 
+}
+//创建iframe
+var newIFrame = function(url){
+	var elemIF = document.createElement("iframe");
+	elemIF.src = url;
+	elemIF.style.display = "none";
+	document.body.appendChild(elemIF);
+}
+
+function downloadOssFile(url){
+	if(url.trim().length==0){
+		showErr("当前文件不存在");
+		return;
+	}else{
+		window.location.href="#(path)/oss/downloadFile?path="+url;
+	}
+}
+/**
+ * 是否存在属性
+ */
+function isExist(data){
+	return typeof data!="undefined"&&null!=data
+}
+/**
+ * post请求封装
+ */
+function post(url,params,callbackFunc){
+	if(!isExist(params)){//封装分页
+		params={
+				page:1
+		};
+	}else if(!isExist(params.page)){
+		params.page=1;
+	}
+	$.post(url, params, function(data, textsataus) {
+		if(typeof callbackFunc =="function"){
+			callbackFunc(data);
+		}
+	});
+}
+/**
+ * 渲染模板
+ @params templateID 模板id
+ @params data 需要渲染的数据
+ */
+function renderHtml(templateID,data){
+	return	laytpl(document.getElementById(templateID).innerHTML).render(data);
+}
+
+/**
+ * 渲染表格
+@params tableID : 表格的id
+@params  templateID: js模板的id
+@params  data : 返回的数据
+@params  params : 访问的参数,用于获取当前的页数和每页行数
+ */
+function renderTable(tableID,templateID,data,params){
+	var html=renderHtml(templateID,data);
+	$('#'+tableID+' tbody').html(html);
+	$('#'+tableID).trigger('footable_initialize');
+	var page =1;
+	var rows=20;//默认20行
+	if(isExist(params)&&isExist(params.page)){
+		page = params.page;
+	}
+	if(isExist(params)&&isExist(params.rows)){
+		rows = params.rows;
+	}
+	handlePage(page, Math.ceil(data.entity.totalRow / rows), data.entity.totalRow);
+}
+/**
+ * 注册回车事件
+ */
+(function($){
+    $.fn.onReturn=function(func){
+		try{
+			$(this).keydown(function(e) {
+				if (e.keyCode == 13) {
+					if(typeof func == 'function'){
+		    			func();
+		    		}
+				}
+			});
+		}catch(ex){
+			console.log(ex);
+		}
+    };
+})(jQuery);
+</script>

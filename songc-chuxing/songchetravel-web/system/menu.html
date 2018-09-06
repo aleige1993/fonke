@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<nav class="navbar-default navbar-static-side" role="navigation">
+	<div class="sidebar-collapse">
+		<ul class="nav metismenu" id="side-menu">
+			<li class="nav-header">
+				<div class="dropdown profile-element">
+					<!-- 
+					<span>
+						<img alt="image" class="img-circle" src="img/profile_small.jpg" />
+					</span>
+					 -->
+					<a data-toggle="dropdown" class="dropdown-toggle" href="ecommerce-orders.html#" aria-expanded="false">
+						<!-- 						<span class="clear"> -->
+						<!-- 							<span class="block m-t-xs"> -->
+						<!-- 								<a href="#"> -->
+						<!--                            			<img src="#(path)/res/images/house.png" height="28px;"> --%>
+						<!--                        		 	</a> -->
+						<!--                        		 </span> -->
+						<!--                         	</span> -->
+						<span class="clear">
+							<span class="block m-t-xs" style="color: #f7f8f8">
+
+<!-- 								<strong class="font-bold"> -->
+<!--  										<img src="#(path)/res/images/house.png" height="28px;"> --%>
+<!-- 								</strong> -->
+							</span>
+						</span>
+					</a>
+				</div>
+				<div class="dropdown profile-element">
+					<!-- 
+					<span>
+						<img alt="image" class="img-circle" src="img/profile_small.jpg" />
+					</span>
+					 -->
+					<a data-toggle="dropdown" class="dropdown-toggle" href="ecommerce-orders.html#" aria-expanded="false">
+						<!-- 						<span class="clear"> -->
+						<!-- 							<span class="block m-t-xs"> -->
+						<!-- 								<a href="#"> -->
+						<!--                             			<img src="#(path)/res/images/house.png" height="28px;"> --%>
+						<!--                        		 	</a> -->
+						<!--                        		 </span> -->
+						<!--                         	</span> -->
+						<div class="clear">
+							<span class="block m-t-xs" style="color: #f7f8f8">
+								<strong class="font-bold">
+										<img src="#(path)/res/images/house.png" height="28px;" style="position:relative;bottom:6px;">
+								</strong>
+								<strong class="font-bold" style="font-size:18px;font-weight:normal;">
+									#(getCurrentUserName(session))
+								</strong>
+							</span>
+						</div>
+					</a>
+					<ul class="dropdown-menu animated fadeInRight m-t-xs">
+						<li>
+							<a href="#" onclick="parent.updatePassWord();">修改密码</a>
+						</li>
+						<li>
+							<a href="#(path)/loginOut">退出</a>
+						</li>
+					</ul>
+				</div>
+				<!-- <div class="logo-element">车联网</div> -->
+			</li>
+				<li>
+					<a href="javascript:void(0)">
+						<i class="fa fa-wordpress"></i>
+						<span class="nav-label">保险公司</span>
+					</a>
+					<ul class="nav nav-second-level collapse">
+						<li>
+							<a href="#(path)/agent/index" class="hyLink">保险公司管理</a>
+						</li>
+					</ul>
+				</li>
+			<li>
+				<a href="javascript:void(0)">
+					<i class="fa fa-flag"></i>
+					<span class="nav-label">门店</span>
+				</a>
+				<ul class="nav nav-second-level collapse">
+					<li>
+						<a href="#(path)/deptSetting/index" class="hyLink">门店参数管理</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="javascript:void(0)">
+					<i class="fa fa-credit-card"></i>
+					<span class="nav-label">保单</span>
+				</a>
+				<ul class="nav nav-second-level collapse">
+					<li>
+						<a href="#(path)/insuranceOrder/index" class="hyLink">保单管理</a>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</nav>
+<!-- 修改密码模态框（Modal） -->
+<div class="modal fade" id="updatePwdDiv" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">修改密码</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="sureStoreName">旧密码</label>
+					<input type="password" class="form-control" id="oldPwd" placeholder="请输入旧密码">
+				</div>
+				<div class="form-group">
+					<label for="sureStoreName">新密码</label>
+					<input type="password" class="form-control" id="newPwd" placeholder="请输入新密码">
+				</div>
+				<div class="form-group">
+					<label for="sureStoreName">确认密码</label>
+					<input type="password" class="form-control" id="sNewPwd" placeholder="请再次输入新密码">
+				</div>
+				<div class="modal-footer">
+					<button class="btn" data-dismiss="modal" id="saveCancelBtn" aria-hidden="true">
+						<i class="fa fa-ban"></i>
+						&nbsp;取消
+					</button>
+					<button class="btn btn-primary" onclick="uptatePwd();">
+						<i class="fa fa-check"></i>
+						&nbsp;修改
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	//打开修改密码弹出层
+	function updatePassWord() {
+		$("#updatePwdDiv").modal({
+			backdrop : 'static',
+			keyboard : false
+		});
+	}
+	//修改密码
+	function uptatePwd() {
+		var params = {};
+		var oldPwd = $("#oldPwd").val();
+		var newPwd = $("#newPwd").val();
+		var sNewPwd = $("#sNewPwd").val();
+		if (oldPwd == "") {
+			showErr("旧密码不能为空");
+			return;
+		}
+		if (newPwd == "") {
+			showErr("新密码不能为空");
+			return;
+		}
+		if (sNewPwd == "") {
+			showErr("确认密码不能为空");
+			return;
+		}
+		if (newPwd != sNewPwd) {
+			showErr("新密码和确认密码不相同");
+			return;
+		}
+		params.oldPwd = oldPwd;
+		params.newPwd = newPwd;
+		params.sNewPwd = sNewPwd;
+		$.post(WEBROOT + '/user/uptatePwd', params, function(data, textsataus) {
+			if (checkResult(data)) {
+				if (data.result.resultMessage == "修改成功") {
+					showSuc("修改成功，请重新登录");
+					$('#updatePwdDiv').modal('hide');
+					setTimeout("window.location.href='#(path)/user/loginOut'", 2000);
+					;
+				}
+			}
+		});
+	}
+</script>

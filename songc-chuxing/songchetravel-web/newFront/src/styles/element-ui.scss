@@ -1,0 +1,295 @@
+ //覆盖一些element-ui样式
+ .block-checkbox {
+   display: block;
+ }
+
+ .operation-container {
+   .cell {
+     padding: 10px !important;
+   }
+   .el-button {
+     &:nth-child(3) {
+       margin-top: 10px;
+       margin-left: 0px;
+     }
+     &:nth-child(4) {
+       margin-top: 10px;
+     }
+   }
+ }
+
+ .el-upload {
+   input[type="file"] {
+     display: none !important;
+   }
+ }
+
+ .el-upload__input {
+   display: none;
+ }
+
+ .cell {
+   .el-tag {
+     margin-right: 8px;
+   }
+ }
+
+ .small-padding {
+   .cell {
+     padding-left: 8px;
+     padding-right: 8px;
+   }
+ }
+
+ .status-col {
+   .cell {
+     padding: 0 10px;
+     text-align: center;
+     .el-tag {
+       margin-right: 0px;
+     }
+   }
+ } //暂时性解决diolag 问题 https://github.com/ElemeFE/element/issues/2461
+ .el-dialog {
+   transform: none;
+   left: 0;
+   position: relative;
+   margin: 0 auto;
+   border-radius: 0px;
+ } //文章页textarea修改样式
+ .article-textarea {
+   textarea {
+     padding-right: 40px;
+     resize: none;
+     border: none;
+     border-radius: 0px;
+     border-bottom: 1px solid #bfcbd9;
+   }
+ } //element ui upload
+ .upload-container {
+   .el-upload {
+     width: 100%;
+     .el-upload-dragger {
+       width: 100%;
+       height: 200px;
+     }
+   }
+ }
+ .el-menu--dark .el-menu-item, .el-menu--dark .el-submenu__title {
+  color: #999;
+ }
+ .el-menu--dark .el-menu-item:hover,
+ .el-menu--dark .el-submenu__title:hover{
+   color: #fff;
+   background-color: #555;
+ }
+ .el-menu-item,
+ .el-submenu__title {
+   height: 44px;
+   line-height: 44px;
+   font-size: 12px;
+   font-weight: bold;
+ }
+ .el-submenu__icon-arrow {
+   transform: scale(.7);
+   right: 15px;
+   line-height: 18px;
+ }
+ .el-submenu.is-opened > .el-submenu__title .el-submenu__icon-arrow{
+   transform: scale(.7) rotateZ(180deg);
+ }
+ .el-menu--collapse .el-submenu .el-menu-item {
+  padding-left: 0px !important;
+  text-align: center;
+}
+.el-submenu .el-menu-item {
+  height: 34px;
+  line-height: 34px;
+  color: #999;
+  padding: 0 20px;
+  padding-left: 50px !important;
+  padding-right: 0 !important;
+}
+.el-menu--dark .el-submenu .el-menu .el-menu-item:hover{
+  background-color: #555;
+  color: #fff;
+}
+.el-menu-item.is-active{
+  color: #fff;
+}
+.menu-wrapper {
+ .el-submenu .el-menu-item {
+  min-width: 100px !important;
+}
+}
+.el-menu--dark .el-submenu .el-menu{
+  background-color: #333333
+}
+ // li.el-submenu{
+ //  margin-bottom: 8px;
+ // }
+ .el-message-box{
+  display: block;
+  margin: 60px auto;
+}
+.app-main .app-levelbar.el-breadcrumb{
+  line-height: 40px !important;
+  padding-left: 10px !important;
+  font-size: 12px !important;
+}
+.el-table{
+  font-size: 12px;
+}
+.el-dialog__body{
+  padding: 20px 20px;
+}
+.el-dialog__header{
+  padding-top: 10px;
+  background-color: #5B8CFF;
+  padding-bottom: 15px;
+  button{
+    position: relative;
+    top: 8px;
+    color: #fff;
+  }
+  .iconfont,
+  i{
+    color: #fff !important;
+  }
+  .dialog-title{
+    color: #fff;
+  }
+}
+.el-form-item__label{
+  font-size: 12px;
+  font-weight: normal;
+}
+.el-dropdown-menu{
+  border: none;
+  .el-dropdown-menu__item{
+    text-align: center;
+  }
+}
+.el-cascader-menus{
+  border: none;
+}
+.el-select-dropdown {
+  border-radius: 0px;
+  border-color: #DCE3F1;
+  li.el-select-dropdown__item.selected.hover {
+    background-color: #5B8CFF;
+  }
+}
+.el-cascader-menu__item.is-active {
+  background-color: #5B8CFF;
+}
+@media screen and (max-width: 768px) {
+  .el-form--inline {
+    .el-form-item {
+      width: 100%;
+    }
+    .el-form-item__content {
+      width: 100%;
+      .el-select {
+        width: 100%;
+      }
+    }
+  }
+  .el-dialog {
+    width: 100%;
+    top: 0 !important;
+    height: 100%;
+    .el-dialog__header {
+      .el-dialog__headerbtn {
+        top: 4px;
+      }
+    }
+    .el-dialog__body{
+      height: calc(100% - 100px);
+      overflow: auto;
+      padding: 10px;
+      -webkit-overflow-scrolling: touch;
+      -webkit-font-smoothing: antialiased;
+      overflow-scrolling: touch;
+      .dialog-form {
+        .el-form-item {
+          width: 100% !important;
+        }
+      }
+      .el-form {
+        padding: 0 10px;
+        .el-row {
+          .el-col {
+            width: 100%;
+          }
+        }
+        .el-input__inner {
+          padding-left: 16px;
+        }
+        .el-form-item {
+          margin-bottom: 15px;
+          .el-form-item__label{
+            text-align: left;
+            float: none;
+            line-height: 30px;
+          }
+          .el-form-item__content{
+            display: block;
+            margin-left: 0 !important;
+          }
+          .el-select,
+          .el-date-editor{
+            width: 100%;
+          }
+        }
+      }
+    }
+    .el-dialog__footer{
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background-color: #fff;
+      padding: 0;
+      button.el-button {
+        border-radius: 0;
+        border: none;
+        width: 50%;
+        margin: 0;
+        padding: 18px 0;
+        font-weight: bold;
+        float: left;
+      }
+      .el-button--default{
+        background-color: $gray;
+        color: #fff;
+      }
+    }
+  }
+  .el-message-box{
+    width: 90%;
+    position: relative;
+    top: 25%;
+    .el-message-box__btns{
+      bottom: 0;
+      width: 100%;
+      background-color: #fff;
+      padding: 0;
+      button.el-button {
+        border-radius: 0;
+        border: none;
+        width: 50%;
+        margin: 0;
+        padding: 18px 0;
+        font-weight: bold;
+        float: left;
+      }
+      .el-button--default{
+        background-color: $gray;
+        color: #fff;
+      }
+      .el-button--primary {
+        background-color: #5B8CFF;
+      }
+    }
+  }
+}

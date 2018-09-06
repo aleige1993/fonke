@@ -1,0 +1,106 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+<meta name="renderer" content="webkit|ie-stand|ie-comp">
+<title>CarShare后台管理</title>
+<!-- 使用WEBKIT内核的标签 -->
+<link rel="icon" href="#(path)/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="#(path)/favicon.ico" type="image/x-icon" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="#(ossPath)/static/carMap/res/css/bootstrap.min.css" rel="stylesheet">
+<link href="#(ossPath)/static/carMap/res/font-awesome/css/font-awesome.css" rel="stylesheet">
+<!-- FooTable -->
+<link href="#(ossPath)/static/carMap/res/css/plugins/footable/footable.core.css" rel="stylesheet">
+<link href="#(ossPath)/static/carMap/res/css/animate.css" rel="stylesheet">
+<link href="#(ossPath)/static/carMap/res/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<link href="#(ossPath)/static/carMap/res/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+
+  <!-- Sweet Alert -->
+<link href="#(ossPath)/static/carMap/res/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+
+ <link href="#(ossPath)/static/carMap/res/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+ <link href="#(ossPath)/static/carMap/res/css/plugins/switchery/switchery.css" rel="stylesheet">
+
+<!-- 这个必须放到最后,覆盖其它属性 -->
+<link href="#(ossPath)/static/carMap/res/css/style.css?r=4" rel="stylesheet">
+
+<script type="text/javascript">
+	var WEBROOT="#(path)";
+	var ADDDIV;
+	var UPDATEDIV;
+</script>
+<style type="text/css">
+.text-success-extend {
+	color: #177cb0;
+}
+
+.label-success-extend {
+	background-color: #177cb0;
+	color: #FFFFFF;
+}
+
+.text-info-extend {
+	color: #a1afc9;
+}
+
+.label-info-extend {
+	background-color: #a1afc9;
+	color: #FFFFFF;
+}
+
+.text-danger-extend {
+	color: #f05654;
+}
+
+.label-danger-extend {
+	background-color: #f05654;
+	color: #FFFFFF;
+}
+
+.btn-sirui {
+	background-color: #177cb0;
+	border-color: #177cb0;
+	color: #FFFFFF;
+}
+.wrapper-content {
+    padding: 0px;
+}
+.cmdBtns{
+	display: inline-flex;
+    white-space: nowrap;
+}
+
+.cmdBtns>.btn:first-child:not(:last-child):not(.dropdown-toggle) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.cmdBtns>.btn:first-child {
+    margin-left: 0;
+}
+.cmdBtns>.btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+    border-radius: 0;
+}
+.cmdBtns>.btn:last-child:not(:first-child), .cmdBtns>.dropdown-toggle:not(:first-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/*footable preview*/
+.footable-row-detail-inner{width:100%;border:1px solid #d3d3d3;margin:0 auto;}
+.footable-row-detail-row{clear:both;}
+.footable-row-detail-row:nth-child(2n-1){background:#f3f3f3;}
+.footable-row-detail-name{width:150px;text-align:right;font-weight: bold;padding:8px 4px;}
+.footable-row-detail-value{margin-left:150px;padding:8px 4px;}
+
+ .laydate_box, .laydate_box * {
+      box-sizing:content-box;
+  }
+  <!-- table选择列插件 -->
+   .footable th{position: relative;display:table-cell;}
+   .footable th:after{position:absolute;width:20px;height:100%;right:0;bottom:0;content: "";cursor:e-resize;}
+   .footable th.active:after{
+     border-right:1px solid #ccc;
+   }
+</style>

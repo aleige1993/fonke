@@ -1,0 +1,37 @@
+<script type="text/html" id="tpl_datatable">
+{{@ for(var i = 0, len = d.entity.list.length; i < len; i++){ }}
+				<tr id="right{{d.entity.list[i].vehicleid}}">
+					<td  style="min-width:30px;">
+						<input type="checkbox" name="DataTableCheckBox" value="{{getValue(d.entity.list[i].vehicleid)}}"/>
+    				</td>
+					<td needHidden="1" style="display: none">
+						{{getValue(d.entity.list[i].orgname)}}
+    				</td>
+					<td needHidden="1" style="display: none">
+						{{getValue(d.entity.list[i].brandname)}}-{{getValue(d.entity.list[i].serialname)}}-{{getValue(d.entity.list[i].vmname)}}
+    				</td>
+					<td title="{{getValue(d.entity.list[i].platenumber)}}">
+						{{getValue(d.entity.list[i].platenumber).length>7 ? (getValue(d.entity.list[i].platenumber).substring(0,7)+"...") : getValue(d.entity.list[i].platenumber) }}
+    				</td>
+					<td needHidden="1" style="display: none">
+						{{@ if(d.entity.list[i].vin!='(null)' && d.entity.list[i].vin!='(NULL)'){}}
+							{{getValue(d.entity.list[i].vin)}}
+						{{@  }}}
+    				</td>
+					<td needHidden="1" style="display: none">
+						{{getValue(d.entity.list[i].current_mile) ? getValue(d.entity.list[i].current_mile).toFixed(2) : '-'}}
+    				</td>
+					<td>
+						{{@  if(getValue(d.entity.list[i].online)){ }}
+							<span class="label label-primary">
+           		 					在线
+							</span>
+						{{@  }else{ }}
+							<span class="label label-danger">
+           		 				离线
+							</span>
+						{{@  } }}
+    				</td>
+				</tr>
+			{{@  } }}
+</script>

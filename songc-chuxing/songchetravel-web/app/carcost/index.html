@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>计费规则</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<style type="text/css">
+article, aside, blockquote, body, button, code, dd, details, div, dl, dt,
+	fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6,
+	header, hgroup, hr, input, legend, li, menu, nav, ol, p, pre, section,
+	td, textarea, th, ul {
+	margin: 0;
+	padding: 0
+}
+
+body, button, input, select, textarea {
+	font-size: 12px;
+}
+
+body {
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+	font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
+		Microsoft YaHei, Arial, sans-serif;
+	padding: 0;
+	margin: 0;
+	background-color: #f1f1f1;
+	height: 100%;
+}
+
+label {
+	font-weight: 700;
+}
+
+html {
+	box-sizing: border-box;
+	height: 100%;
+}
+
+*, *:before, *:after {
+	box-sizing: inherit;
+}
+
+.no-padding {
+	padding: 0px !important;
+}
+
+.padding-content {
+	padding: 4px 0;
+}
+
+a:focus, a:active {
+	outline: none;
+}
+
+a, a:focus, a:hover {
+	cursor: pointer;
+	color: inherit;
+	text-decoration: none;
+}
+
+.fr {
+	float: right;
+}
+
+.fl {
+	float: left;
+}
+
+.pr-5 {
+	padding-right: 5px;
+}
+
+.pl-5 {
+	padding-left: 5px;
+}
+
+.block {
+	display: block;
+}
+
+.pointer {
+	cursor: pointer;
+}
+
+.inlineBlock {
+	display: block;
+}
+</style>
+<style type="text/css">
+.content {
+	background-color: #fff;
+	min-height: 100%;
+	margin-top: 100px;
+	padding-bottom: 30px;
+}
+
+.car-img {
+	width: 60%;
+	display: block;
+	margin: 0px auto 0px auto;
+	position: relative;
+	top: -40px;
+}
+
+.car-name {
+	text-align: center;
+	font-size: 16px;
+	color: #686868;
+}
+
+.con-box {
+	width: 60%;
+	margin: 0 auto;
+	margin-top: 20px;
+	text-align: center;
+	position: relative;
+}
+
+.con-box .title {
+	text-align: center;
+	font-size: 14px;
+	margin-bottom: 20px;
+	color: #676767;
+	display: inline-block;
+	padding: 0 20px;
+	background-color: #fff;
+	position: relative;
+	z-index: 9;
+}
+
+.con-box .title-line {
+	width: 100%;
+	height: 1px;
+	background-color: #e2e2e2;
+	display: block;
+	position: absolute;
+	top: 9px;
+}
+
+.con-box .item .item-title {
+	font-size: 14px;
+	color: #676767;
+	text-align: left;
+	margin-bottom: 10px;
+}
+
+.con-box .item .item-title .price {
+	float: right;
+}
+
+.con-box .item .list {
+	list-style: none;
+	text-align: left;
+	margin-bottom: 20px;
+}
+
+.con-box .item .list li {
+	color: #999;
+	position: relative;
+	line-height: 24px;
+}
+
+.con-box .item .list li .price {
+	position: absolute;
+	right: 0;
+}
+
+.con-box .txt {
+	font-size: 10px;
+	color: #999999;
+	text-align: left;
+	line-height: 16px;
+}
+</style>
+</head>
+
+<body>
+	<div class="content">
+		<img src="http://sirui-img.oss-cn-hangzhou.aliyuncs.com/#(vehiclemodel.vm_pic_url)" alt="" class="car-img" />
+		<h1 class="car-name">#(vehiclemodel.name)</h1>
+		#if(use_time==1)
+		<div class="con-box">
+			<h2 class="title">时间计费</h2>
+			<div class="title-line"></div>
+			<div class="item">
+				<h3 class="item-title">今天</h3>
+				<ul class="list">
+					<li>
+						<span class="time">普通时段</span>
+						<span class="price">#(todayPrice.dfPrice)元/分钟</span>
+					</li>
+					#for(item:todayPrice.sectionPrices)
+					<li>
+						<span class="time">#(item.startTime)-#(item.endTime)</span>
+						<span class="price">#(item.price)元/分钟</span>
+					</li>
+					#end
+				</ul>
+			</div>
+			<div class="item">
+				<h3 class="item-title">明天</h3>
+				<ul class="list">
+					<li>
+						<span class="time">普通时段</span>
+						<span class="price">#(tomorrowPrice.dfPrice)元/分钟</span>
+					</li>
+					#for(item:tomorrowPrice.sectionPrices)
+					<li>
+						<span class="time">#(item.startTime)-#(item.endTime)</span>
+						<span class="price">#(item.price)元/分钟</span>
+					</li>
+					#end
+				</ul>
+			</div>
+		</div>
+		#end 
+		#if(use_mile==1)
+		<div class="con-box">
+			<h2 class="title">里程计费</h2>
+			<div class="title-line"></div>
+			<div class="item">
+				<ul class="list">
+					<li>
+						<span class="time">起步价（含#(fee_mile.base_mile)公里）</span>
+						<span class="price">#(fee_mile.start_price)元</span>
+					</li>
+					<li>
+						<span class="time">超里程价</span>
+						<span class="price">#(fee_mile.price)元/公里</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		#end
+	#if(use_hour==1)
+		<div class="con-box">
+			<h2 class="title">小时计费</h2>
+			<div class="title-line"></div>
+			<div class="item">
+				<ul class="list">
+					<li>
+						<span class="time">普通时段</span>
+						<span class="price">#(fee_hour.price)元/小时</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		#end
+		#if(feeModel.type==3)
+		<div class="con-box">
+			<h2 class="title">最低消费</h2>
+			<div class="title-line"></div>
+			<div class="txt">
+				<p>#(feeModel.min_fee)元</p>
+			</div>
+		</div>
+		#end
+		<div class="con-box">
+			<h2 class="title">备注</h2>
+			<div class="title-line"></div>
+			<div class="txt">
+				<p>注：行驶过程中产生的其他费用，如停车费等需用户自理。</p>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

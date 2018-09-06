@@ -1,0 +1,33 @@
+<script type="text/html" id="timerRightOpen_datatable">
+<td  style="min-width:30px;">
+				<input type="checkbox" checked="checked" name="DataTableCheckBox" value="{{getValue(d.VEHICLEID)}}"/>
+    		</td>
+			<td  needHidden="1">
+				{{getValue(d.orgname)}}
+    		</td>
+			<td  needHidden="1">
+				{{getValue(d.brandname)}}-{{getValue(d.serialname)}}-{{getValue(d.vmname)}}
+    		</td>
+			<td title="{{getValue(d.platenumber)}}">
+				{{getValue(d.platenumber).length>7 ? (getValue(d.platenumber).substring(0,7)+"...") : getValue(d.platenumber) }}
+    		</td>
+			<td  needHidden="1">
+				{{@ if(d.vin!='(null)' && d.vin!='(NULL)'){}}
+					{{getValue(d.vin)}}
+				{{@  }}}
+    		</td>
+			<td  needHidden="1">
+				{{getValue(d.current_mile) ? getValue(d.current_mile).toFixed(2) : '-'}} KM
+    		</td>
+			<td>
+				{{@  if(getValue(d.online)){ }}
+					<span class="label label-primary">
+           		 		在线
+					</span>
+				{{@  }else{ }}
+					<span class="label label-danger">
+           		 		离线
+					</span>
+				{{@  } }}
+    		</td>
+</script>

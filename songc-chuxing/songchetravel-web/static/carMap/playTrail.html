@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	
+	#include("/static/carMap/config/config.html")
+	
+	<style type="text/css">
+		body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+		.anchorBL{display:none;}
+		#allmap{position:relative;}
+ 		.next{position:absolute;right:40px; top:20px;z-index:2;width:20px; height:20px;cursor:pointer;} 
+ 		
+ 		.btn-theme{
+ 			line-height: 12px; background-color: #3895E5; color: white; border: 1px solid #3895E5;font-size: 12px;
+ 		}
+ 		
+ 		.date-div{
+ 			padding: 0; line-height: 35px; text-align: right;
+ 		}
+	</style>
+	
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=K52pNzWT61z1EHvdZptaSmlPRc7mKbjC"></script>
+	<title>播放轨迹</title>
+</head>
+<body>
+	<div style="position: relative;height: 100%;">
+		<div id="allmap"></div>
+
+		<div style="position: absolute; right: 40px; top: 5px; z-index: 2; width: 300px; border: 1px solid #7cacfa;">
+			<div class="portlet-title" style="font-family: SimSun; border-bottom: 0; padding: 0 10px; margin-bottom: 0; color: #fff; min-height: 25px; background-color: #3895e5;">
+				<div id="divTerName" class="caption" style="font-family: SimSun; padding: 4px 0; font-size: 12px; font-weight: bold;"></div>
+				<div class="tools" style="font-family: SimSun;">
+					<a class="expand" title="" data-original-title="" href="javascript:;" style="font-family: SimSun;"></a>
+				</div>
+			</div>
+			<div class="portlet-body" style="font-family: SimSun; ">
+				<div id="divTrackPanel" class="form-inline" style="font-family: SimSun; background-color: #fff; padding: 3px; min-width: 299px;">
+					<div class="row" style="font-family: SimSun;">
+						<div class="clearfix">
+							<div class="col-md-5" style="font-family: SimSun; ">
+								<select id="selPlayTimeSection" name="PlayTimeSection" class="form-control input-xsmall-120 pull-left"
+									style="height: 28px; padding: 2px; font-size: 12px; width: 120px !important; font-size: 12px; font-weight: 400; color: #333; background-color: #fff; border: 1px solid #e5e5e5; -webkit-box-shadow: none; box-shadow: none; -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s; transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;">
+									<option class="optTravel" value="1" selected="selected">最近1次行程</option>
+									<option class="optTravel" value="3">最近3次行程</option>
+									<!-- <option class="optTravel" value="5">最近5次行程</option> -->
+									<option value="3">3小时内</option>
+									<option value="6">6小时内</option>
+									<option value="12">12小时内</option>
+									<option value="24">24小时内</option>
+									<option value="48">2天内</option>
+									<option value="72">3天内</option>
+									<option value="0">自定义时段</option>
+								</select>
+							</div>
+	
+							<div class="col-md-3" style="font-family: SimSun; ">
+								<button id="btnTrackQuery" class="btn btn-theme" style="">
+									<i class="fa fa-search-plus"></i>
+									搜索
+								</button>
+								<button id="btnTrackPause" class="btn btn-theme " style="display: none;">
+									<i class="fa fa-pause"></i>
+									暂停
+								</button>
+								<button id="btnTrackContinue" class="btn btn-theme " style="display: none;">
+									<i class="fa fa-play"></i>
+									继续
+								</button>
+							</div>
+							<div class="col-md-3" style="font-family: SimSun; ">
+								<button id="btnTrackPlay" class="btn btn-theme">
+									<i class="fa fa-play"></i>
+									播放
+								</button>
+								<button id="btnTrackStop" class="btn btn-theme" style="display: none;">
+									<i class="fa fa-stop"></i>
+									停止
+								</button>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row" style="margin-top: 5px; display: none;" id="timeQuery">
+						<div class="col-md-12">
+							<div class="col-md-2 date-div">开始</div>
+							<div class="col-md-10">
+								<div class="form-group">
+									<div class="input-group date">
+										<span class="input-group-addon">
+											<i class="fa fa-calendar"></i>
+										</span>
+										<input id="startTime" name="startTime" type="text" class="form-control" onclick="laydate({istime: true, festival: true,format: 'YYYY-MM-DD hh:mm:ss'})" />
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-12">
+							<div class="col-md-2 date-div">结束</div>
+							<div class="col-md-10">
+								<div class="form-group">
+									<div class="input-group date">
+										<span class="input-group-addon">
+											<i class="fa fa-calendar"></i>
+										</span>
+										<input id="endTime" name="endTime" type="text" class="form-control" onclick="laydate({istime: true, festival: true,format: 'YYYY-MM-DD hh:mm:ss'})" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+
+	</div>
+</body>
+</html>
+
+<!-- 脚本必须放到最后 -->
+#include("/static/carMap/config/configScript.html")
+<script type="text/javascript">
+//全局
+var vehicleID = parent.window.vID;
+var siruiVehicleID = parent.window.svID;
+console.info(vehicleID);
+console.info(siruiVehicleID);
+
+var tripMap;
+var trailObj = parent.listData[vehicleID];
+console.info(parent.listData);
+
+$(function(){
+	tripMap = initMap();
+	
+	//查询最新的轨迹里程
+	queryTripCount(1);
+	console.info(trailObj);
+	//车牌号显示
+	$("#divTerName").html(trailObj.platenumber);
+	
+	$("#btnTrackQuery").click(btnTrackQuery);
+	
+	$("#selPlayTimeSection").change(selPlayTimeSelect);
+	
+	$("#btnTrackPlay").click(function(){
+		startTrail();
+	});
+	
+	$("#btnTrackStop").click(function(){
+		stopTrail();
+	});
+});
+
+//初始化地图
+function initMap(){
+	var tripMap = new BMap.Map("allmap");
+	tripMap.enableScrollWheelZoom(true);
+	tripMap.centerAndZoom(new BMap.Point(116.404, 39.915), 11);  // 初始化地图,设置中心点坐标和地图级别
+	tripMap.setCurrentCity("北京");  
+	return tripMap;
+}
+//获取轨迹经纬度
+var arrayPoints=new Array();
+var start;//开始点
+var arrayDirection=new Array();//方向数组
+
+//查询最近的轨迹信息
+function queryTripCount(number){
+	var index = layer.load();
+	$.post(WEBROOT + '/car/monitor/queryLastTrail', {
+		vehicleID : siruiVehicleID,
+		number : number
+	}, function(data, textsataus) {
+		layer.close(index);
+		if (checkResult(data)) {
+			if(data.entity && data.entity.length > 0){
+				handlerTrip(data);
+			}else{
+				cleanMap();//清理之前的轨迹描点
+				showErr("没有查询到轨迹");
+			}
+		}else{
+			cleanMap();//清理之前的轨迹描点
+		}
+	});
+}
+
+//查询轨迹的按钮
+function btnTrackQuery(){
+	var $option = $("#selPlayTimeSection").find("option:selected");
+	var value = $option.val();
+	if($option.hasClass("optTravel")){//查最近几次
+		queryTripCount(value);
+	}else{//根据时间查
+		if(parseInt(value, 10) > 0){
+			queryTripByTime(value);
+		}else if(parseInt(value, 10) == 0){
+			queryTripByTime(0, $("#startTime").val(), $("#endTime").val());
+		}
+	}
+}
+
+//根据时间查询轨迹
+function queryTripByTime(hours, startTime, endTime){
+	var index = layer.load();
+	$.post(WEBROOT + '/car/monitor/queryTripByTime', {
+		vehicleID : siruiVehicleID,
+		hours : hours,
+		startTime : startTime,
+		endTime : endTime
+	}, function(data, textsataus) {
+		layer.close(index);
+		if (checkResult(data)) {
+			if(data.entity && data.entity.length > 0){
+				handlerTrip(data);
+			}else{
+				cleanMap();//清理之前的轨迹描点
+				showErr("没有查询到轨迹");
+			}
+		}else{
+			cleanMap();//清理之前的轨迹描点
+		}
+	});
+}
+
+function selPlayTimeSelect(){
+	var $option = $("#selPlayTimeSection").find("option:selected");
+	var value = $option.val();
+	if(parseInt(value, 10) == 0){
+		$("#timeQuery").show();
+	}else{
+		$("#timeQuery").hide();
+	}
+}
+
+//处理轨迹信息
+function handlerTrip(data){
+	cleanMap();//清理之前的轨迹描点
+	
+	var totalPoint = data.entity.length;
+	if(totalPoint>0){
+		for(var i=0;i<totalPoint;i++){
+			var arr = gcj2bd(data.entity[i].lng,data.entity[i].lat);
+			var point = new BMap.Point(arr[0],arr[1]);
+			arrayPoints.push(point);
+			arrayDirection.push(data.entity[i].direction);
+		}
+		//起点经纬度
+		var qidianArr = gcj2bd(data.entity[0].lng, data.entity[0].lat);
+		//止点经纬度
+		var zhidianArr = gcj2bd(data.entity[totalPoint-1].lng, data.entity[totalPoint-1].lat);
+		var startPt = new BMap.Point(qidianArr[0],qidianArr[1]);
+		var endPt = new BMap.Point(zhidianArr[0],zhidianArr[1]);
+		var startIcon = new BMap.Icon("/static/carMap/res/images/startPoint.png",new BMap.Size(20,31));
+		var endIcon = new BMap.Icon("/static/carMap/res/images/endPoint.png",new BMap.Size(20,31));
+		startMarker = new BMap.Marker(startPt,{icon:startIcon}); 
+		endMarker = new BMap.Marker(endPt,{icon:endIcon}); 
+		
+		//止点
+		polyline = new BMap.Polyline(arrayPoints, {strokeColor:"blue", strokeWeight:5, strokeOpacity:1});
+		//根据提供的地理区域或坐标设置地图视野，调整后的视野会保证包含提供的地理区域或坐标
+		tripMap.setViewport(arrayPoints);	
+		tripMap.addOverlay(polyline);
+		tripMap.addOverlay(startMarker);
+		tripMap.addOverlay(endMarker);
+	}else{
+		showErr("尚未产生有轨迹");
+	}
+}
+
+var pi = 3.14159265358979324;
+var a = 6378245.0;
+var ee = 0.00669342162296594323;
+var x_pi = 3.14159265358979324*3000.0/180.0;
+//世界大地坐标转为百度坐标
+function gcj2bd(lon,lat) {
+    var x = lon, y = lat;
+    var z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * x_pi);
+    var theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * x_pi);
+    var bd_lon = z * Math.cos(theta) + 0.0065;
+    var bd_lat = z * Math.sin(theta) + 0.006;
+    var result = [];
+    result.push(bd_lon);
+    result.push(bd_lat);
+    return result;
+}
+//地图上的点
+var startMarker;//起点
+var endMarker;//止点
+var polyline;//轨迹 
+
+var pointNum=0;
+
+//清空地图
+function cleanMap(){
+	clearTimer();//定制定时器
+	stopTrail();//停止播放
+	arrayPoints = [];
+	arrayDirection = [];
+	pointNum=0;
+	tripMap.removeOverlay(start);
+	tripMap.removeOverlay(polyline);
+	tripMap.removeOverlay(startMarker);
+	tripMap.removeOverlay(endMarker);
+}
+//定时器
+var timer;
+var isStop = false;
+function startTrail(){
+	if(arrayPoints.length==0){
+		showErr("尚未产生有轨迹");
+		return;
+	}
+	if(timer){
+		clearTimer();
+	}
+	
+	isStop = false;
+	$("#btnTrackPlay").hide();
+	$("#btnTrackStop").show();
+	
+	timer = setInterval(function(){
+		if(isStop){
+			return;
+		}
+		if(pointNum>0){
+			tripMap.removeOverlay(start);
+		}
+		var icon = new BMap.Icon(getPositionPic(pointNum),new BMap.Size(27,27));
+		start = new BMap.Marker(arrayPoints[0],{icon:icon}); 
+		tripMap.addOverlay(start);
+		start.setPosition(arrayPoints[pointNum]);
+		pointNum++;
+		if(pointNum==arrayPoints.length){
+			pointNum=0;
+			tripMap.removeOverlay(start);
+			stopTrail();
+			clearTimer();
+		}
+	},100);
+}
+
+function getPositionPic(index){
+	var pic = "/static/carMap/res/images/";
+	if(arrayDirection[index]>337.5 || arrayDirection[index]<=22.5){
+		pic += "north.png";
+	}else if(22.5<arrayDirection[index] && arrayDirection[index]<=67.5){
+		pic += "eastNorth.png";
+	}else if(67.5<arrayDirection[index] && arrayDirection[index]<=112.5){
+		pic += "east.png";
+	}else if(112.5<arrayDirection[index] && arrayDirection[index]<=157.5){
+		pic += "eastSouth.png";
+	}else if(157.5<arrayDirection[index] && arrayDirection[index]<=202.5){
+		pic += "south.png";
+	}else if(202.5<arrayDirection[index] && arrayDirection[index]<=247.5){
+		pic += "westSouth.png";
+	}else if(247.5<arrayDirection[index] && arrayDirection[index]<=292.5){
+		pic += "west.png";
+	}else if(292.5<arrayDirection[index] && arrayDirection[index]<=337.5){
+		pic += "westNorth.png";
+	}
+	return pic;
+}
+
+function getAngle(index){
+	var jd = (arrayDirection[index]/180)*3.1415926;
+	return jd;
+}
+
+//停止播放
+function stopTrail(){
+	isStop = true;
+	
+	$("#btnTrackPlay").show();
+	$("#btnTrackStop").hide();
+}
+
+function clearTimer(){
+	clearInterval(timer);
+}
+</script>

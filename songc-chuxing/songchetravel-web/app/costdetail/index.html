@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>费用明细</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<style type="text/css">
+article, aside, blockquote, body, button, code, dd, details, div, dl, dt,
+	fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6,
+	header, hgroup, hr, input, legend, li, menu, nav, ol, p, pre, section,
+	td, textarea, th, ul {
+	margin: 0;
+	padding: 0
+}
+
+body, button, input, select, textarea {
+	font-size: 12px;
+}
+
+body {
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+	font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
+		Microsoft YaHei, Arial, sans-serif;
+	padding: 0;
+	margin: 0;
+	background-color: #f1f1f1;
+	height: 100%;
+}
+
+label {
+	font-weight: 700;
+}
+
+html {
+	box-sizing: border-box;
+	height: 100%;
+}
+
+*, *:before, *:after {
+	box-sizing: inherit;
+}
+
+.no-padding {
+	padding: 0px !important;
+}
+
+.padding-content {
+	padding: 4px 0;
+}
+
+a:focus, a:active {
+	outline: none;
+}
+
+a, a:focus, a:hover {
+	cursor: pointer;
+	color: inherit;
+	text-decoration: none;
+}
+
+.fr {
+	float: right;
+}
+
+.fl {
+	float: left;
+}
+
+.pr-5 {
+	padding-right: 5px;
+}
+
+.pl-5 {
+	padding-left: 5px;
+}
+
+.block {
+	display: block;
+}
+
+.pointer {
+	cursor: pointer;
+}
+
+.inlineBlock {
+	display: block;
+}
+</style>
+<style type="text/css">
+.content {
+	background-color: #fff;
+	min-height: 100%;
+	padding-bottom: 30px;
+	padding-top: 1px;
+}
+
+.car-img {
+	width: 60%;
+	display: block;
+	margin: 0px auto 0px auto;
+	position: relative;
+	top: -30px;
+}
+
+.car-name {
+	text-align: center;
+	font-size: 16px;
+	color: #686868;
+}
+
+.con-box {
+	width: 75%;
+	margin: 0 auto;
+	margin-top: 20px;
+	text-align: center;
+	position: relative;
+}
+
+.con-box .title {
+	text-align: center;
+	font-size: 14px;
+	margin-bottom: 20px;
+	color: #676767;
+	display: inline-block;
+	padding: 0 20px;
+	background-color: #fff;
+	position: relative;
+	z-index: 9;
+}
+
+.con-box .title-line {
+	width: 100%;
+	height: 1px;
+	background-color: #e2e2e2;
+	display: block;
+	position: absolute;
+	top: 9px;
+}
+
+.con-box .item .item-title {
+	font-size: 14px;
+	color: #676767;
+	text-align: left;
+	margin-bottom: 10px;
+}
+
+.con-box .item .item-title .price {
+	float: right;
+}
+
+.con-box .item .list {
+	list-style: none;
+	text-align: left;
+	margin-bottom: 20px;
+}
+
+.con-box .item .list li {
+	color: #999;
+	position: relative;
+	line-height: 24px;
+}
+
+.con-box .item .list li .price {
+	position: absolute;
+	left: 100px;
+}
+
+.con-box .item .list li .total {
+	position: absolute;
+	right: 0;
+	color: #676767;
+	font-weight: bold;
+}
+
+.con-box .txt {
+	font-size: 10px;
+	color: #999999;
+	text-align: left;
+	line-height: 16px;
+}
+
+.total-price {
+	font-size: 16px;
+	display: block;
+	text-align: right;
+	color: #676767;
+	font-weight: bold;
+}
+
+.tit-list {
+	list-style: none;
+	font-size: 12px;
+	color: #676767;
+	line-height: 24px;
+	text-align: left;
+}
+
+.tit-list li {
+	position: relative;
+}
+
+.tit-list li .value {
+	position: absolute;
+	right: 0;
+	width: 70%;
+	display: inline-block;
+	text-align: right;
+}
+</style>
+</head>
+
+<body>
+	<div class="content">
+		<div class="con-box">
+			<h2 class="title">订单时间</h2>
+			<div class="title-line"></div>
+			<ul class="tit-list">
+				<li>
+					<span class="label">开始时间：</span>
+					<span class="value">#(order.startTime)</span>
+				</li>
+				<li>
+					<span class="label">结束时间：</span>
+					<span class="value">#(order.endTime)</span>
+				</li>
+			</ul>
+		</div>
+		#if(order.use_min_fee==1)
+		<div class="con-box">
+			<h2 class="title">用车消费</h2>
+			<div class="title-line"></div>
+			<div class="item">
+				<ul class="list">
+					<li>
+						<span class="time">最低消费</span>
+						<span class="total">#(order.use_min_fee_value)元</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		#else 
+		#if(order.fee_type==1)
+		<div class="con-box">
+			<h2 class="title">分钟费用</h2>
+			<div class="title-line"></div>
+			#for(item:order.fee_minutes)
+			<div class="item">
+				<h3 class="item-title">#(item.currDay)</h3>
+				<ul class="list">
+					#for(subitem:item.sectionPriceCount) 
+					#if(subitem.based==1)
+					<li>
+						<span class="time">普通(#(subitem.totalMinute)分钟)</span>
+						<span class="price">#(subitem.price)元/分钟</span>
+						<span class="total">#(subitem.totalFee)元</span>
+					</li>
+					#else
+					<li>
+						<span class="time">#(subitem.startMinuteStr)-#(subitem.endMinuteStr)</span>
+						<span class="price">#(subitem.price)元/分钟</span>
+						<span class="total">#(subitem.totalFee)元</span>
+					</li>
+					#end
+					 #end
+				</ul>
+			</div>
+			#end 
+		</div>
+		#end
+		#if(order.fee_type==2)
+		<div class="con-box">
+			<h2 class="title">里程费用</h2>
+			<div class="title-line"></div>
+			<div class="item">
+				<ul class="list">
+					<li>
+						<span class="time">起步价(含#(order.fee_mile.base_mile)公里)</span>
+						<span class="total">#(order.fee_mile.start_price)元</span>
+					</li>
+					#if(order.fee_mile.mile_pass_distance>0)
+					<li>
+						<span class="time">超里程费（超出#(order.fee_mile.mile_pass_distance)公里）</span>
+						<span class="total">#(order.fee_mile.mile_pass_fee)元</span>
+					</li>
+					#end
+				</ul>
+			</div>
+		</div>
+		#end 
+		<!-- 里程费用结束 -->
+		#if(order.fee_type==4)
+		<div class="con-box">
+			<h2 class="title">小时费用（#(order.fee_hours_price)元/小时）</h2>
+			<div class="title-line"></div>
+			<div class="item">
+				<ul class="list">
+					#for(item:order.fee_hours)
+					<li>
+						<span class="time">#(item.currDay)</span>
+						<span class="total">#(item.slotFee)元</span>
+					</li>
+					 #end
+				</ul>
+			</div>
+		</div>
+		#end
+		<!-- 分钟费用结束 -->
+		#if(order.fee_type==3)
+		<div class="con-box">
+			<h2 class="title">分钟费用</h2>
+			<div class="title-line"></div>
+			#for(item:order.fee_minutes)
+			<div class="item">
+				<h3 class="item-title">#(item.currDay)</h3>
+				<ul class="list">
+					#for(subitem:item.sectionPriceCount) 
+					#if(subitem.based==1)
+					<li>
+						<span class="time">普通(#(subitem.totalMinute)分钟)</span>
+						<span class="price">#(subitem.price)元/分钟</span>
+						<span class="total">#(subitem.totalFee)元</span>
+					</li>
+					#else
+					<li>
+						<span class="time">#(subitem.startMinuteStr)-#(subitem.endMinuteStr)</span>
+						<span class="price">#(subitem.price)元/分钟</span>
+						<span class="total">#(subitem.totalFee)元</span>
+					</li>
+					#end
+					 #end
+				</ul>
+			</div>
+			#end 
+		</div>
+		<div class="con-box">
+			<h2 class="title">里程费用</h2>
+			<div class="title-line"></div>
+			<div class="item">
+				<ul class="list">
+					<li>
+						<span class="time">起步价(含#(order.fee_mile.base_mile)公里)</span>
+						<span class="total">#(order.fee_mile.start_price)元</span>
+					</li>
+					#if(order.fee_mile.mile_pass_distance>0)
+					<li>
+						<span class="time">超里程费（超出#(order.fee_mile.mile_pass_distance)公里）</span>
+						<span class="total">#(order.fee_mile.mile_pass_fee)元</span>
+					</li>
+					#end
+				</ul>
+			</div>
+		</div>
+		#end
+		<!-- 组合费用结束--- -->
+	#end
+
+	<div class="con-box">
+		#if(order.have_extra_fee==1)
+			<h2 class="title">其他</h2>
+			<div class="title-line"></div>
+			<div class="item">
+				<ul class="list">
+					#if(order.urgent_price>0)
+					<li>
+						<span class="time">紧急还车</span>
+						<span class="total">#(order.urgent_price)元</span>
+					</li>
+					#end 
+					#if(order.stop_station_status==1)
+					<li>
+						<span class="time">跨区域还车</span>
+						<span class="total">#(order.stop_station_fee)元</span>
+					</li>
+					#end
+				</ul>
+			</div>
+			#end
+		</div>
+
+		<div class="con-box">
+			<h2 class="title">总计</h2>
+			<div class="title-line"></div>
+			<span class="total-price">￥#(order.price_total)元</span>
+		</div>
+	</div>
+</body>
+
+</html>

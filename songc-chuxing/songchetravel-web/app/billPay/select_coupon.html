@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="/app/billPay/css/reset.css" />
+<link rel="stylesheet" type="text/css" href="/app/billPay/css/styles.css" />
+<title>账单支付</title>
+</head>
+<body>
+	<ul class="coupon-list">
+		#if(coupons!=null) #for(item:coupons) #if(item.use_condition==1)
+		<li data-coupon_cu_id='#(item.coupon_customer_id)'>
+			<img src="/app/billPay/img/coupon-border.svg" alt="" class="left-border" />
+			<img src="/app/billPay/img/coupon-border.svg" alt="" class="right-border" />
+			<div class="left">
+				<span class="price">
+					￥
+					<b>#(item.denomination)</b>
+				</span>
+				<p class="tips">满#(item.full_cut_amount)减#(item.denomination)</p>
+			</div>
+			<p class="time-title">使用时间：</p>
+			<p class="time">#(item.begin_time_str) - #(item.end_time_str)</p>
+		</li>
+		#else
+		<li data-coupon_cu_id='#(item.coupon_customer_id)'>
+			<img src="/app/billPay/img/coupon-border.svg" alt="" class="left-border" />
+			<img src="/app/billPay/img/coupon-border.svg" alt="" class="right-border" />
+			<div class="left">
+				<span class="price">
+					￥
+					<b>#(item.denomination)</b>
+				</span>
+				<p class="tips">无条件使用</p>
+			</div>
+			<p class="time-title">使用时间：</p>
+			<p class="time">#(item.begin_time_str) - #(item.end_time_str)</p>
+		</li>
+		#end 
+		#end 
+		#else
+		<img src="/app/billPay/img/no_coupon.svg" class="no_coupon" />
+		<p class="tips" style="text-align: center; line-height: 40px; font-size: 16px; color: #999;">暂无可用优惠券</p>
+		#end
+	</ul>
+	<a href="javascript:;" id="btn_submit" class="btn coupon-btn disabled">确定</a>
+	<!-- 	<a href="#" class="btn back-btn">返回</a>
+ -->
+</body>
+<script src="/app/billPay/js/zepto_1.1.3.js" type="text/javascript" charset="utf-8"></script>
+<!-- <script type="text/javascript">
+	$(function() {
+		var Li = $('.coupon-list li');
+		Li.click(function() {
+			Li.removeClass('select');
+			$(this).toggleClass('select');
+			if (!$('.coupon-list .select').length) {
+				$('.coupon-btn').addClass('disabled');
+			} else {
+				$('.coupon-btn').removeClass('disabled');
+			}
+		});
+		$("#btn_submit").click(function() {
+			if ($('.coupon-list .select').length) {
+				if ($('.coupon-list .select').length == 1) {
+					var selectedObj = $('.coupon-list .select').eq(0);
+					if (selectedObj) {
+						var coup_cu_id = selectedObj.attr("data-coupon_cu_id");
+						location.href = '/order/billPay?ticket_id=' + coup_cu_id;
+					}
+				}
+			} else {
+				location.href = '/order/billPay';
+			}
+		});
+	})
+</script> -->
+	<script type="text/javascript">
+			$(function() {
+				var Li = $('.coupon-list li');
+				Li.click(function() {
+					if ($(this).hasClass('select')) {
+						$(this).removeClass('select');
+						return false;
+					}
+					Li.removeClass('select');
+					$(this).toggleClass('select');
+					if (!$('.coupon-list .select').length) {
+						$('.coupon-btn').addClass('disabled');
+					} else {
+						$('.coupon-btn').removeClass('disabled');
+					}
+				});
+				$("#btn_submit").click(function() {
+					if ($('.coupon-list .select').length) {
+						if($('.coupon-list .select').length==1){
+						var selectedObj=$('.coupon-list .select').eq(0);
+						if(selectedObj){
+							 var coup_cu_id=selectedObj.attr("data-coupon_cu_id");
+							location.href='/order/billPay?ticket_id='+coup_cu_id;	 
+						}
+						}
+					}else{
+						location.href='/order/billPay';	 
+					}
+				});
+			})
+	</script>
+</html>

@@ -1,0 +1,73 @@
+<script type="text/html" id="status_datatable">
+<tr id="{{d.vehicleid}}" showMarker="1">
+					<td>
+						{{@  if(getValue(d.online)){ }}
+							<span class="label label-primary">
+           		 				在线
+							</span>
+						{{@  }else{ }}
+							<span class="label label-danger">
+           		 				离线
+							</span>
+						{{@  } }}
+    				</td>
+					<td>
+						{{getValue(d.platenumber)}}
+    				</td>
+					<td>
+						{{@ if(d.vin!='(null)' && d.vin!='(NULL)'){}}
+							{{getValue(d.vin)}}
+						{{@  }}}
+    				</td>
+					<td>
+						{{getValue(d.current_mile) ? getValue(d.current_mile).toFixed(2) : '-'}} KM
+    				</td>
+					<td>
+						{{@  if(getValue(d.voltage)>0){ }}
+							{{getValue(d.voltage)+"V"}}
+						{{@  }else{ }}
+							- V
+						{{@  } }}
+    				</td>
+					<td>
+						{{@  if(getValue(d.under_maintain)){ }}
+							<span style="color:red">是</span>
+						{{@  }else{ }}
+							<span style="color:green">否</span>
+						{{@  } }}
+    				</td>
+					<td>
+						{{@  if(getValue(d.current_order)==0){ }}
+							否
+						{{@  }else{ }}
+							是
+						{{@  } }}
+    				</td>
+					<td>
+						{{@  if(getValue(d.left_elec_percent)>0){ }}
+							{{getValue(d.left_elec_percent)+"%"}}
+						{{@  }else{ }}
+							- %
+						{{@  } }}
+    				</td>
+					<td>
+						{{@  if(getValue(d.left_oil_percent)>0){ }}
+							{{getValue(d.left_oil_percent)+"%"}}
+						{{@  }else{ }}
+							- %
+						{{@  } }}
+    				</td>
+					<td>
+						{{@  if(d.UNKOWN_ADDRESS){ }}
+                    		<span style="color: red; ">{{getValue(d.ADDRESS)}}</span>
+						{{@  }else{ }}
+                    		{{getValue(d.ADDRESS)}}
+						{{@  } }}
+    				</td>
+					<td>
+						<button class="btn btn-danger btn-xs" type="button" onclick="statusRemove({{d.vehicleid}});" title="" data-toggle="tooltip" data-original-title="删除">
+							<i class="fa fa-times"></i>
+						</button>
+    				</td>
+				</tr>
+</script>

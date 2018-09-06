@@ -1,0 +1,93 @@
+<script type="text/html" id="markerInfo_tmpl">
+<div class="BMap_bubble_content" style="width: auto; height: auto;">
+	<div class="bg-blue" style="width: 412px">
+		<div class="pull-left">
+			<i class="fa fa-file-text-o"></i>
+			&nbsp;{{getValue(d.platenumber)}}
+		</div>
+    <div style="margin-right: 10px; float: right;">
+    </div>
+	</div>
+	<table class="table table-bordered table-responsive table-margin-bottom-0" style="font-family: SimSun; margin-bottom: 5px; ">
+		<tbody>
+			<tr>
+				<td class="text-right active active-background">品牌</td>
+				<td style="min-width: 100px">{{getValue(d.brandname)}}</td>
+				<td class="text-right active active-background">车系</td>
+				<td style="min-width: 60px">{{getValue(d.serialname)}}</td>
+			</tr>
+			<tr>
+				<td class="text-right active active-background">车型</td>
+				<td>{{getValue(d.vmname)}}</td>
+				<td class="text-right active active-background">目前里程</td>
+				<td>{{getValue(d.current_mile) ? getValue(d.current_mile).toFixed(2) : '-'}} KM</td>
+			</tr>
+			<tr>
+				<td class="text-right active active-background">在线状态</td>
+				<td>
+					{{@  if(getValue(d.online)){ }}
+						<span style="color:green">在线</span>
+					{{@  }else{ }}
+						<span style="color:red">离线</span>
+					{{@  } }}
+				</td>
+				<td class="text-right active active-background">是否维护</td>
+				<td>
+					{{@  if(getValue(d.under_maintain)){ }}
+						<span style="color:red">是</span>
+					{{@  }else{ }}
+						<span style="color:green">否</span>
+					{{@  } }}					
+				</td>
+			</tr>
+			<tr>
+				<td class="text-right active active-background">是否租用</td>
+				<td>
+					{{@  if(getValue(d.current_order)==0){ }}
+						否
+					{{@  }else{ }}
+						是
+					{{@  } }}
+				</td>
+				
+				<td class="text-right active active-background">当前电压</td>
+				<td>
+					{{@  if(getValue(d.voltage)>0){ }}
+						{{getValue(d.voltage)+"V"}}
+					{{@  }else{ }}
+						- V
+					{{@  } }}					
+				</td>
+			</tr>
+			<tr>
+				<td class="text-right active active-background">剩余电量</td>
+				<td>
+					{{@  if(getValue(d.left_elec_percent)>0){ }}
+						{{getValue(d.left_elec_percent)+"%"}}
+					{{@  }else{ }}
+						- %
+					{{@  } }}					
+				</td>
+				<td class="text-right active active-background">剩余油量</td>
+				<td>
+					{{@  if(getValue(d.left_oil_percent)>0){ }}
+						{{getValue(d.left_oil_percent)+"%"}}
+					{{@  }else{ }}
+						- %
+					{{@  } }}					
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	{{@ if(getValue(d.gjflag)){ }}
+	<div class="btn-group" style="font-family:SimSun; height: 39px;" role="group">
+    	<a class="btn faa-parent" style="color: white; background-color: #4e9de0; line-height: 15px;" href="javascript:playTrail({{getValue(d.vehicleid)}}, {{getValue(d.sirui_vehicleid)}})" name="faa" id="faa" onmouseover="faaOnmouseOver()" onmouseout="faaOnmouseOut()"><i class="fa fa-repeat faa-spin"></i> 轨迹</a>
+	</div>
+	{{@  } }}
+	<!--
+    <a class="btn btn-theme margin-right-5 margin-top-5 faa-parent animated-hover" href="/Track/Index?optype=1&amp;terid=632536" target="_blank"><i class="fa fa-map-marker faa-vertical"></i>跟踪</a>    <a class="btn btn-theme margin-right-5 margin-top-5 faa-parent animated-hover" href="/Fence/Index?TerId=632536&amp;IMEI=693502000016656" target="_blank"><i class="fa fa-circle-o fa-2 faa-burst"></i>围栏</a>
+    <a class="btn btn-theme margin-right-5 margin-top-5 faa-parent animated-hover" href="javascript:;" onclick="layer.open({type: 2,title: '设备详情',area: ['793px'], offset: '50px',content: '/Ter/Detail/632536'});"><i class="fa fa-file-text-o faa-horizontal"></i>资料</a>
+    <a class="btn btn-theme margin-right-5 margin-top-5 faa-parent animated-hover" href="javascript:;" onclick="layer.open({type: 2,title: '参数设置',area: ['470px','400px'], offset: '50px',content: '/Order/Send/632536'});"><i class="fa fa-cog faa-spin"></i>设置</a>
+-->
+</div>
+</script>

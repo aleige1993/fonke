@@ -1,0 +1,775 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+#include("/static/carMap/config/config.html")
+<!-- <link type="text/css" href="/res/css/plugins/footable/footable.core.css" rel="stylesheet"> -->
+<link type="text/css" href="/static/carMap/monitor.css" rel="stylesheet">
+<title>车辆监控</title>
+</head>
+<body>
+	<div id="wrapper">
+		<div id="page-wrapper" class="gray-bg" style="min-height: 954px;margin:0;">
+			<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+				<div class="wrapper wrapper-content  animated fadeInRight">
+		            <div class="row"  id="allContent">
+		            	<!-- 左边 -->
+		                <div class="col-lg-10"  id="leftContent" style="padding:0;">
+		                    <div class="ibox" style="margin-bottom:0;">
+		                        <div class="ibox-content" style="padding: 0;">
+									<!-- 上面 地图 -->
+									<div class="clearfix mapWrap" style="position:relative;">
+		                        	    <div id="mapContent"></div>
+		                        	    	<!-- 右边 -->
+											<!-- 开关 -->
+											<div class="right_ctrl_show" id="rightCtrlDiv">
+												<a onclick="rightCtrl(this);">
+													<!-- <i class="fa fa-angle-double-right fa-3x" ></i> -->
+													<img src="/static/carMap/res/images/monitor/left.png" alt="" />
+												</a>
+											</div>
+											
+											<!-- 下面 车辆状态 -->
+											<!-- 开关 -->
+			                        		<div class="left_ctrl_show" id="leftCtrlDiv">
+												<a onclick="downCtrl(this);">
+													<img src="/static/carMap/res/images/monitor/down.png" alt="" />
+												</a>
+											</div>
+		                        	</div>
+		                        	<!-- 全屏 -->
+		                        	<div class="full_screen_btn" id="fullScreenBtn">
+										<a onclick="fullScreen();" class="full_screen_fant">
+											<button><i class="fa fa-arrows-alt fa-lg"></i>&nbsp;全屏地图</button>
+										</a>
+									</div>
+									<!-- 计时器 -->
+									<div id="countdowner" style="font-family: SimSun;"></div>
+						
+		                        	<div class="down_all_content_show" id="downAllContent" >
+										<div class="ibox-content text-center" style="padding-top: 0px;" id="downContentDiv">
+				                            <div class="row">
+												<div class="col-lg-12">
+													<div style="max-height: 170px; overflow: auto;">
+														<table class="footable table  table-striped-cancaled toggle-arrow-tiny" data-page-size="20" id="statusListDataTable">
+															<thead>
+																<tr>
+																	<th>状态</th>
+																	<th>车牌号</th>
+																	<th>车架号</th>
+																	<th>速度</th>
+																	<th>方向</th>
+																	<th>定位时间</th>
+																	<th>位置</th>
+																	<th>离线时间</th>
+																	<th>操作<a href="javascript:statusRemoveAll();" title="清除全部" style="color: red; cursor: pointer;">【清除全部】</a></th>
+																</tr>
+															</thead>
+															<tbody style="text-align: left; overflow: auto; ">
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+				                        </div>
+				                    </div>
+		                        </div>
+		                    </div>
+						</div>
+						
+
+						<div class="col-lg-2 right_all_content_show" id="rightAllContent">
+							<div class="col-lg-12"  style="padding-left: 0px; padding-right: 0px; ">
+								<div class="ibox" style="margin-bottom : 0px; ">
+									<div class="ibox-title">
+										<h5>车辆设备</h5>
+										<div class="ibox-tools">
+											<button class="btn btn-primary" type="button" id="searchBut" onclick="openQueryCarModal();">
+												<i class="fa fa-search"></i>
+												&nbsp;查询
+											</button>
+										</div>
+									</div>
+								</div>
+								<div class="ibox-content text-center">
+		                            <div class="row">
+										<div class="col-lg-12"  style="overflow-y: auto;">
+											<div style="min-height: 550px;">
+												<table class="footable table  table-striped-cancaled toggle-arrow-tiny" data-page-size="20" id="listDataTable">
+													<thead>
+														<tr>
+															<th rowspan="2" data-sort-ignore="true" ><input type="checkbox" name="checkAll" id="checkAll" value=""></th>
+															<th rowspan="2" needHidden="1" style="display: none">机构</th>
+															<th rowspan="2" needHidden="1" style="display: none">车型</th>
+															<th rowspan="2">车牌号</th>
+															<th rowspan="2" needHidden="1" style="display: none">车架号</th>
+															<th rowspan="2" needHidden="1" style="display: none">目前里程(KM)</th>
+															<th rowspan="2" >状态</th>
+														</tr>
+													</thead>
+													<tbody style="max-height: 600px; text-align: left;">
+													</tbody>
+												</table>
+											</div>
+											
+											<div class="row">
+											   <div class="col-lg-12">
+												<table class="table" style="margin-bottom: 0px;">
+													<tr>
+														<td colspan="7" class="footable-visible">
+															<ul class="pagination pull-left" id="datatotal"></ul>
+													        <ul class="pagination pull-right" id="datapage"></ul>
+														</td>
+													</tr>
+												</table>
+												</div>
+											</div>
+										</div>
+									</div>
+		                        </div>
+							</div>
+						</div>
+						
+					</div>
+        		</div>
+        	</div>
+		
+		<!-- 查询车辆 model ↓ -->
+		<div class="modal inmodal" id="openQueryCarModel" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content animated flipInY">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<small class="font-bold">查询车辆</small>
+					</div>
+					<div class="modal-body">
+						<form id="queryForm" method="post" action="#">
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label class="control-label" for="vin">车架号</label>
+										<input type="text" id="vin" name="vin" placeholder="车架号" class="form-control" />
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label class="control-label" >当前里程(KM)</label>
+										<select class="form-control" id="mileage" style="width: 195px;">
+											<option value="">请选择车辆里程</option>
+											<option value="5000">5000KM以内</option>
+											<option value="10000">10000KM以内</option>
+											<option value="20000">20000KM以内</option>
+											<option value="50000">50000KM以内</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+						<input  type="hidden" id="hiddenpage"/>
+						<button type="button" id="btn-saveEdit" class="btn btn-primary ladda-button" data-style="zoom-in" onclick="query(1)">查询</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div>
+			<input type="text" id="vehicleIds" style="display: none;"/>
+		</div>
+		<!-- 查询车辆 model ↑ -->
+		
+		<!-- 查询出来的车辆的列表模板 -->
+		#include("/static/carMap/temp/carList.html")
+
+		<!-- 勾选后展示详情的模板 -->
+		#include("/static/carMap/temp/status.html")
+		
+		<!-- 定时器更新详情的模板 -->
+		#include("/static/carMap/temp/timerStatus.html")
+		
+		<!-- 定时器更新右边列表的模板 -->
+		#include("/static/carMap/temp/timerRight.html")
+		
+		<!-- 定时器更新右边列表(打开)的模板 -->
+		#include("/static/carMap/temp/timerRightOpen.html")
+		
+		<!-- 车辆在地图上的marker -->
+		#include("/static/carMap/temp/markerInfo.html")
+
+		#include("/static/carMap/config/configScript.html")
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=K52pNzWT61z1EHvdZptaSmlPRc7mKbjC"></script>
+		<script type="text/javascript" src="/static/carMap/baiduMap.js"></script>
+		<script type="text/javascript" src="/static/carMap/res/js/Map.js"></script>
+		
+		<script>
+			/* 全局属性 */
+			var map;//地图
+			var listData = [];//查询出来的车辆设备列表，vehicleID为key
+			var statusData = [];//车辆设备状态列表，vehicleID为key
+			var vehicleMap = new Map();//车辆设备状态列表，vehicleID为key
+			var markersMap = new Map();//车辆设备状态列表，vehicleID为key
+			var localMarker;//当前地图上显示的marker
+			var markers = [];
+			
+			var mapBetween = 304;//初始化地图高度用的,这是左下底部的高度
+			var mapHeight;//初始化地图的高度
+			var downHeight;//地图下面那个div的初始高度
+			
+			var isRightOpen = false;//标记右边的列表是否打开
+			
+			var UNKOWN_GPS_TIPS = "未收集到坐标信息，无法定位";
+			
+			//开始计时器
+			var mapSecond=59;
+			//计时器刷新数据频率
+			var timerSecond = 1;
+			$(document).ready(function() {
+				$('#listDataTable').footable();
+				$(".btn-sirui ").click();
+				//注册回车查询
+				$("#queryForm input").onReturn(function() {
+					query(1)
+				});
+				
+				//查询部门树
+// 				queryDepartmentTree();		
+				
+				//查询车辆列表
+				query(1);
+				
+				//勾选全部
+				$("#listDataTable").on("click", "#checkAll", function(e){
+					var $CheckBox = $("#listDataTable").find("input[name='DataTableCheckBox'] ");
+					var checked = $("#checkAll").is(":checked");
+					if(checked){//全部勾选
+						$CheckBox.each(function(){
+							statusShow($(this).val());
+							$(this)[0].checked=true;
+						});
+					}else{//全部删除
+						$CheckBox.each(function(){
+							statusRemove($(this).val());
+							$(this)[0].checked=false;
+						});
+					}
+				});
+				
+				//勾选单个
+				$("#listDataTable").on("click", "input[name='DataTableCheckBox' ]", function(e){
+					if($(this).is(":checked")){
+						statusShow($(this).val());
+					}else{
+						statusRemove($(this).val());
+					}
+				});
+				
+				//初始化地图的高度和右边的高度
+				var winHeight = $("#page-wrapper").height();
+				var topHeight = $(".navbar-static-top").height();
+				mapHeight = winHeight-topHeight;
+
+				$("#mapContent").height(mapHeight* 0.7928855);
+				$("#downAllContent").attr("style", "min-height:"+mapHeight*0.2+"px");
+				$("#rightAllContent").attr("style", "min-height:"+mapHeight*0.9928855+"px");
+				
+				/***地图 ↓ ***/
+				map = initMap();
+				/***地图  ↑ ***/
+				
+				//部门树 选择是否包含子门店
+				$("#isContainsChild").click(isContainsChild);
+				
+				$("#statusListDataTable").on("click", "tr[showMarker='1'] td:not(:last)", function(){
+					var vehicleID = $($(this).parent()).attr("id");
+					showInfowindow(markers[vehicleID]);
+				});
+				
+				//根据部门名称搜索
+// 				$("#searchDepFind").keyup(function(e){
+// 					if (e.keyCode == 13) {
+// 						var data = {
+// 							depName : $(this).val()
+// 						};
+// 						queryDepartmentTree(data);
+// 					}
+// 				});
+				
+				
+				//开启计时器
+				startTimer();
+			});
+			
+			/***************地图 ↓****************/
+			function initMap(){
+				var map = new baiduMap("mapContent",{enableMapClick:false});
+				return map;
+			}
+			
+			//展示marker
+			function showMarker(object){
+				var thisPoint = map._createPoint(object.lat, object.lng);
+				window.map.getLocation(thisPoint, function(position){
+					if(object.UNKOWN_ADDRESS){
+						position = UNKOWN_GPS_TIPS;
+					}
+					var currentContent = setContent(position, object);
+					var img;
+					if(!object.isonline){
+						img = "/static/carMap/res/images/monitor/my_car_unline.png";
+					}else{
+						img = "/static/carMap/res/images/monitor/my_car_online.png";
+					}
+					var mkCurrent = map._createHistoryMarker(thisPoint, '当前信息', 
+		            		img, false,
+			            		currentContent, null);
+						mkCurrent.set_ZIndex(1001);
+						markers[object.vehicleid] = mkCurrent;
+						//将地图上标注存入全局map
+						markersMap.put("'"+object.vehicleid+"'",mkCurrent);
+			            showInfowindow(mkCurrent);
+			    	});
+			}
+			
+			//全屏地图
+			function fullScreen(){
+				downCtrl();
+			}
+			
+			function showInfowindow(mk){
+		        var s = mk.getIcon().size;
+		        var infoOpts = {
+		            offset: new BMap.Size(0, -(s.height)),
+		            enableMessage: false
+		        };
+		        mk.infowindow = new BMap.InfoWindow(mk.infoContent, infoOpts);
+		        mk.infowindow.disableAutoPan();
+				
+				mk.infowindow._show(mk.getPosition());
+				
+				map._panTo(mk.getPosition());
+	            map._setZoom(14);
+	     
+			}
+			
+			function setContent(position, object){
+				if(position){
+					object.POSITION = position;
+				}
+				console.info(object);
+				var html=renderHtml("markerInfo_tmpl", object);
+				return html;
+			}
+			
+			//删除marker
+			function removeMarker(marker){
+				map._removeMarker(markersMap.get("'"+marker+"'"));
+				markersMap.remove("'"+marker+"'");
+			}
+			
+			/***************地图 ↑****************/
+			
+			
+			/***************车辆查询条件 ↓****************/
+			function openQueryCarModal() {
+				$('#openQueryCarModel').modal({
+					backdrop : "static"
+				});
+			}
+
+			//查询门店树
+// 			function queryDepartmentTree(data) {
+// 				post(WEBROOT + '/dep/getDepartmentTree', data, function(data, textsataus) {
+// 					loading("getDepartmentTree");
+// 					if (checkResult(data)) {
+// 						unloading("getDepartmentTree");
+// 						if (data.entity) {
+// 							var treeNode = [];
+// 							for ( var i = 0; i < data.entity.length; ++i) {
+// 								var node = {};
+// 								node.id = data.entity[i].ID;
+// 								node.pId = data.entity[i].PID;
+// 								node.name = data.entity[i].NAME;
+// 								node.checked = data.entity[i].CHECKED;
+// 								node.open = data.entity[i].OPEN;
+// 								treeNode.push(node);
+// 							}
+// 							data.entity = treeNode;
+// 						}
+// 						var treeObj = $.fn.zTree.init($("#depTree"), initTreeSetting(), data.entity);
+// 						treeObj.expandAll(true);
+// 					}
+// 				});
+// 			}
+
+			//门店树配置
+			function initTreeSetting() {
+				var zTreeSetting = {
+					data : {
+						simpleData : {
+							enable : true
+						}
+					},
+					callback : {
+						onClick : function(event, treeId, treeNode) {
+							$("#depName").val(treeNode.name);
+							$("#depLevelCode").val(treeNode.id);
+							hideMenu();
+						}
+					}
+				};
+				return zTreeSetting;
+			}
+
+			//树展示和隐藏
+			$(".treeInput").click(function(event) {
+				var treeID = $(this).attr("treeID");
+				$("#" + treeID).slideDown("fast");
+				$(document).bind("mousedown", onBodyDown);
+			});
+			function onBodyDown(event) {
+				if (!(event.target.className == "treeInput" || event.target.className == "treeDiv" || $(event.target).parents(".treeDiv").length > 0)) {
+					hideMenu();
+				}
+			}
+			function hideMenu() {
+				$(".treeDiv").fadeOut("fast");
+				$(document).unbind("mousedown", onBodyDown);
+			}
+
+			function isContainsChild() {
+				var $isContainsChild = $("#isContainsChild");
+				if ($isContainsChild.is(":checked")) {
+					$isContainsChild.val("1");
+				} else {
+					$isContainsChild.val("0");
+				}
+			}
+			/***************车辆查询条件 ↑****************/
+
+			//封装查询车辆列表的参数
+			function getParams() {
+				var depName = $.trim($("#depName").val());
+				var depLevelCode = $.trim($("#depLevelCode").val());
+				var customerUserName = $.trim($("#customerUserName").val());
+				var phone = $.trim($("#phone").val());
+				var vin = $.trim($("#vin").val());
+				var mileage = $("#mileage").val();
+				var isContainsChild = $("#isContainsChild").val();
+				var params = {
+					vin : vin,
+					depLevelCode : depLevelCode,
+					mileage : mileage,
+					isContainsChild : isContainsChild
+				};
+				return params;
+			}
+
+			function query(page) {
+				$("#hiddenpage").val(page);
+				var rows = 20;
+				var params = getParams();
+				params.page = page;
+				params.rows = rows;
+				//查询时加上遮罩层
+				var index = layer.load(0, {shade: [0.5,'#fff']});
+				loading("getList");
+				post(WEBROOT + '/car/monitor/getList', params, function(data, textsataus) {
+					unloading("getList");
+					layer.close(index);
+					if (checkResult(data)) {
+						$('#openQueryCarModel').modal('hide');
+						data.rows = rows;
+						data.pageNum = page;
+						renderTable("listDataTable", "tpl_datatable", data, params);//渲染table.
+						toggleListDataTable(isRightOpen);
+						regToolTip();//重新渲染btn的tips
+						//翻页判断是否勾选
+						if (data.entity && data.entity.list && data.entity.list.length > 0) {
+							for ( var i = 0; i < data.entity.list.length; ++i) {
+								if(vehicleMap.get("'"+data.entity.list[i].vehicleid+"'")!=null){
+									$("#listDataTable input[value='"+data.entity.list[i].vehicleid+"']").attr("checked", true);
+								}
+								listData[data.entity.list[i].vehicleid] = data.entity.list[i];
+							}
+						}
+						//如果全选按钮是勾上的 也需要取消勾选
+						if($("#checkAll").is(":checked")){
+							$("input[name='checkAll']").removeAttr("checked"); 
+						}
+					}
+				});
+			}
+
+			//在状态列表中展示
+			//北京天安门坐标
+			var DEFAULT_LAT = 39.9056377;
+			var DEFAULT_LNG = 116.3954343;
+			function statusShow(vehicleID) {
+				//当前展示的marker
+				localMarker=vehicleID;
+				if(vehicleMap.get("'"+vehicleID+"'")){
+					return;
+				}  
+				//vehicleid存入隐藏域
+				var vehicleIds=$("#vehicleIds").val();
+				if(vehicleIds==""){
+					$("#vehicleIds").val(vehicleID+",");
+				}else{
+					$("#vehicleIds").val(vehicleIds+vehicleID+",");
+				}
+				var infoObj =listData[vehicleID];	
+				if(infoObj.lat && infoObj.lng){
+					var thisPoint = map._createPoint(infoObj.lat, infoObj.lng);
+					window.map.getLocation(thisPoint, function(position){
+						infoObj.ADDRESS=position;
+						vehicleMap.put("'"+vehicleID+"'",infoObj);//将下方列表中的数据存到Map中
+						var html=renderHtml("status_datatable", infoObj);
+						$('#statusListDataTable tbody').append(html);
+						showMarker(vehicleMap.get("'"+vehicleID+"'"));
+			    	})
+				}else{
+					//默认定位到北京天安门
+					infoObj.lat = DEFAULT_LAT;
+					infoObj.lng = DEFAULT_LNG;
+					infoObj.ADDRESS=UNKOWN_GPS_TIPS;
+					infoObj.UNKOWN_ADDRESS = "1";//标记为未收集到坐标无法定位
+					
+					vehicleMap.put("'"+vehicleID+"'",infoObj);//将下方列表中的数据存到Map中
+					var html=renderHtml("status_datatable", infoObj);
+					$('#statusListDataTable tbody').append(html);
+					showMarker(vehicleMap.get("'"+vehicleID+"'")); //经纬度为空的时候不在地图上显示车辆图标
+				}
+			}
+			
+			//在状态列表中移除
+			//状态列表中删除用的
+			function statusRemove(vehicleID){
+				var vehicleIds = $("#vehicleIds").val();
+				vehicleIds = vehicleIds.replace(vehicleID+",", "");
+				$("#vehicleIds").val(vehicleIds);
+				vehicleMap.remove("'"+vehicleID+"'");
+				$('#statusListDataTable tr[id="' + vehicleID + '"]').remove();
+				$("#listDataTable input[value='"+vehicleID+"']").attr("checked", false);
+				removeMarker(vehicleID);
+			}
+			
+			function statusRemoveAll(){
+				$("#statusListDataTable").find("tr").each(function(){
+					var vehicleID = $(this).attr("id");
+					if(vehicleID && vehicleID>0){
+						statusRemove(vehicleID);
+					}
+				});
+				//如果全选按钮是勾上的 也需要取消勾选
+				if($("#checkAll").is(":checked")){
+					$("input[name='checkAll']").removeAttr("checked"); 
+				}
+			}
+			
+			//右边的开关  向左打开
+			function rightCtrl(self){
+				//右边div的伸缩
+				//$("#rightAllContent").slideToggle("fast"); 
+				$("#rightAllContent").toggleClass("col-lg-2").toggleClass("col-lg-7");//右边伸缩
+				$("#leftContent").toggleClass("col-lg-10").toggleClass("col-lg-5");//地图的伸缩
+				$("#rightCtrlDiv").toggleClass("right_ctrl_show").toggleClass("right_ctrl_hidden");//开关切换
+				if($("#rightAllContent").hasClass("col-lg-2")){
+					$("#rightCtrlDiv img").attr("src", "/static/carMap/res/images/monitor/left.png");
+					
+					//把属性隐藏
+					toggleListDataTable(false);
+				}else{
+					$("#rightCtrlDiv img").attr("src", "/static/carMap/res/images/monitor/right.png");//开关切换
+					toggleListDataTable(true);
+				}
+			}
+			//右边的开关  向右收缩
+			function toRightCtrl(obj){
+				$("#rightAllContent").toggle();
+				$("#torightCtrlDiv").toggleClass("left_ctrl_hidden").toggleClass("left_ctrl_show");
+				$("#rightAllContent").toggleClass("down_all_content_show"); 
+				if($("#rightAllContent").hasClass("down_all_content_show")){
+					$("#mapContent").height(mapHeight*0.7928855);
+					$("#torightCtrlDiv img").attr("src", "/static/carMap/res/images/monitor/down.png");//开关切换
+				}else{
+					$("#mapContent").height(mapHeight*0.9928855);//地图伸
+				
+					$("#torightCtrlDiv img").attr("src", "/static/carMap/res/images/monitor/up.png");//开关切换
+				}
+				
+				return false; 
+			}
+			function toggleListDataTable(isShow){
+				if(isShow){
+					$("#listDataTable").find("[needHidden='1']").each(function(){
+						$(this).show();
+					});
+				}else{
+					$("#listDataTable").find("[needHidden='1']").each(function(){
+						$(this).hide();
+					});
+				}
+				isRightOpen = isShow;
+			}
+			
+			//下边的开关
+			function downCtrl(){
+				$("#downAllContent").toggle(); 
+				$("#leftCtrlDiv").toggleClass("left_ctrl_hidden").toggleClass("left_ctrl_show");
+				$("#downAllContent").toggleClass("down_all_content_show"); 
+				if($("#downAllContent").hasClass("down_all_content_show")){
+					$("#mapContent").height(mapHeight*0.7928855);
+					$("#leftCtrlDiv img").attr("src", "/static/carMap/res/images/monitor/down.png");//开关切换
+				}else{
+					$("#mapContent").height(mapHeight*0.9928855);//地图伸
+				
+					$("#leftCtrlDiv img").attr("src", "/static/carMap/res/images/monitor/up.png");//开关切换
+				}
+				
+				return false; 
+			}
+			//轨迹按钮移上去改变样式
+			function faaOnmouseOver(){
+				var obj = $("#faa");
+				var oBtn = obj.find(".fa");
+				oBtn.removeClass("faa-spin");
+				oBtn.addClass("fa-spin");
+			}
+			//轨迹按钮移走改变样式
+			function faaOnmouseOut(){
+				var obj = $("#faa");
+				var oBtn = obj.find(".fa");
+				oBtn.removeClass("fa-spin");
+				oBtn.addClass("faa-spin");
+			}
+			
+			//弹出地图窗口，播放轨迹
+			var vID = 0;
+			var svID = 0;
+			function playTrail(vehicleID, siruiVehicleID){
+				vID = vehicleID;
+				svID = siruiVehicleID;
+				
+				var width=$(window).width()-30;
+				var height=$(window).height() - 100;
+				layer.open({
+				    type: 2,
+//			 	    maxmin: true,
+				    shadeClose: false,
+				    title: '轨迹播放',
+				    shade: [0.4,'#000'],
+				    area: [(width)+'px', (height) +'px'],
+				    content:'/car/monitor/toPlayTrail'
+				}); 
+			}
+			
+			//转换方向数字为中文
+			function convertDirection(direction){
+				if(direction>337.5 || direction<=22.5){
+					return "北";
+				}else if(22.5<direction && direction<=67.5){
+					return "东北";
+				}else if(67.5<direction && direction<=112.5){
+					return "东";
+				}else if(112.5<direction && direction<=157.5){
+					return "东南";
+				}else if(157.5<direction && direction<=202.5){
+					return "南";
+				}else if(202.5<direction && direction<=247.5){
+					return "西南";
+				}else if(247.5<direction && direction<=292.5){
+					return "西";
+				}else if(292.5<direction && direction<=337.5){
+					return "西北";
+				}
+			}
+			function startTimer(){
+				setInterval(reflashTimer,1000);
+			}
+			//刷新定时器
+			function reflashTimer(){
+				if(mapSecond==timerSecond){
+					//刷新
+					reflashTable();
+				}
+				$("#countdowner").html(mapSecond+"秒");
+				mapSecond--;
+			}
+			//刷新下面的列表
+			function reflashTable(){
+				if(!vehicleMap.isEmpty()){
+					var rows = 2000;
+					var params = getParams();
+					params.page = 1;
+					params.rows = rows;
+					params.vehicleIds =  $("#vehicleIds").val();
+					params.vehicleIds = $("#vehicleIds").val();
+					post(WEBROOT + '/car/monitor/getList', params, function(data, textsataus) {
+						if (checkResult(data)) {
+							if (data.entity && data.entity.list && data.entity.list.length > 0) {
+								for ( var i = 0; i < data.entity.list.length; ++i) {
+									//将最新数据放入map中
+									vehicleMap.put("'"+data.entity.list[i].vehicleid+"'",data.entity.list[i]);
+									//更新下方列表
+									//获取地址
+									var localData = data.entity.list[i]; 
+									var bottomPoint = null;
+									if(localData.lat && localData.lng){
+										bottomPoint = map._createPoint(localData.lat, localData.lng);
+									}else{
+										bottomPoint = map._createPoint(localData.lat, localData.lng);
+										localData.UNKOWN_ADDRESS = "1";//标记为未收集到坐标无法定位
+									}
+									
+									window.map.getLocation(bottomPoint, function(position){
+										if(locationObject.UNKOWN_ADDRESS){
+											position = UNKOWN_GPS_TIPS;
+										}
+										localData.ADDRESS=position;
+										var _temp = renderHtml("timerStatus_datatable",localData);
+										$("#"+localData.vehicleid).html(_temp);
+							    	});
+									
+									//判断右边列表是否展开
+									if($('#rightCtrlDiv').hasClass('right_ctrl_show')){
+										//更新右边的列表
+										_temp = renderHtml("timerRight_datatable",localData);
+									}else{
+										_temp = renderHtml("timerRightOpen_datatable",localData);
+									}
+									$("#right"+localData.vehicleid).html(_temp);
+									//更新地图上的marker
+									if(localData.vehicleid==localMarker){
+										var locationObject = localData;
+										var thisPoint = null;
+										var marker = null;
+										if(locationObject.lat != "" && locationObject.lng!=""){
+											thisPoint = map._createPoint(localData.lat, localData.lng);
+										}else{
+											thisPoint = map._createPoint(DEFAULT_LAT, DEFAULT_LNG);
+											locationObject.UNKOWN_ADDRESS = "1";//标记为未收集到坐标无法定位
+										}
+										marker = markersMap.get("'"+localMarker+"'");
+									
+										window.map.getLocation(thisPoint, function(position){
+											if(locationObject.UNKOWN_ADDRESS){
+												position = UNKOWN_GPS_TIPS;
+											}
+											marker.infoContent = setContent(position, locationObject);
+											showInfowindow(marker);
+								    	});
+									}
+								}
+							}
+						}
+					});
+				}else{
+					console.info("没的数据，不刷新");
+				}
+				mapSecond=59;
+			}
+		</script>
+</body>
+</html>

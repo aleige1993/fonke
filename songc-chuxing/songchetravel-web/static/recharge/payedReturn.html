@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>充值成功</title>
+	<link rel="stylesheet" href="css/reset.css" />
+	<style>
+		.msg {
+			height: 100%;
+			padding-top: 50px;
+			background-color: #fff;
+			text-align: center;
+		}
+
+		.msg .iconfont {
+			font-size: 80px;
+		}
+
+		.msg.error .iconfont {
+			color: #f86345;
+		}
+
+		.msg.success .iconfont {
+			color: #57ae4c;
+		}
+
+		.msg.info .iconfont {
+			color: orange;
+		}
+
+		.msg .text {
+			font-size: 16px;
+			margin-top: 5px;
+		}
+		.loading {
+			animation: circle infinite 2s linear;
+			-moz-animation: circle infinite 2s linear;
+			-webkit-animation: circle infinite 2s linear;
+			display: inline-block;
+		}
+		@keyframes circle {
+			0% {
+				transform: rotate(0deg);
+				-webkit-transform: rotate(0deg);
+			}
+			100% {
+				transform:  rotate(360deg);
+				-webkit-transform: rotate(360deg);
+			}
+		}
+		@-webkit-keyframes circle {
+			0% {
+				transform: rotate(0deg);
+				-webkit-transform: rotate(0deg);
+			}
+			100% {
+				transform:  rotate(360deg);
+				-webkit-transform: rotate(360deg);
+			}
+		}
+		@-moz-keyframes circle {
+			0% {
+				-moz-transform: rotate(0deg);
+			}
+			100% {
+				-moz-transform:  rotate(360deg);
+			}
+		}
+		.backBtn{margin-top: 20px;line-height:40px;font-size:16px;width:90%;text-align:center;background-color:#32ad98;display:block;margin-left:5%;color:#fff;border-radius:4px;}
+	</style>
+</head>
+
+<body>
+
+	<div class="msg error hide">
+		<i class="iconfont">&#xe743;</i>
+		<p class="text">充值失败</p>
+		<a href="javascript:;" class="backBtn">返回</a>
+	</div>
+	<div class="msg success hide">
+		<i class="iconfont">&#xe649;</i>
+		<p class="text">充值成功</p>
+		<a href="javascript:;" class="backBtn">返回</a>
+	</div>
+	<div class="msg info">
+		<i class="iconfont loading">&#xe601;</i>
+		<p class="text">己提交,等待结果</p>
+	</div>
+	<div class="msg load hide">
+		<i class="iconfont">&#xe601;</i>
+		<p class="text">暂时无法获取支付状态，请返回，等待几分钟后手动刷新</p>
+		<a href="javascript:;" class="backBtn">返回</a>
+	</div>
+</body>
+<script type="text/javascript" src="js/jquery-2.1.1.js"></script>
+<script type="text/javascript">
+			// siruiInitJSContext.rechargeBack()
+		function GetQueryString(name) {
+			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+			var r = window.location.search.substr(1).match(reg);
+			if (r != null)
+				return unescape(r[2]);
+			return null;
+		}
+		var state = "";
+		var id = GetQueryString('out_trade_no');
+		$(function () {
+			clock();
+			$('.backBtn').click(function () {
+				siruiInitJSContext.backHomeFromPayResult("back");
+			})
+		})
+		var time=1;
+		function clock(){
+			$.ajax({
+				url: '/transactionRecord/validOrderResult',
+				data: {
+					out_trade_no: id
+				},
+				method: 'post',
+				success: function (data) {
+					if (data.entity.status ==3 ) {
+						if(time>=10){
+							$('.load').removeClass('hide');
+							$('.info').addClass('hide');
+							return false
+						}else{
+							setTimeout(function () {
+								clock()
+							}, 2000);
+							time++;
+						}
+						if (data.entity.status ==4) {
+						$('.success').removeClass('hide');
+						$('.info').addClass('hide');
+						try {
+							siruiInitJSContext.payResult("SUCCESS");
+						} catch (error) {
+							console.log(error.message)
+						}
+					} else if (data.entity.status == 5) {
+						$('.error').removeClass('hide');
+						$('.info').addClass('hide');
+						try {
+							siruiInitJSContext.payResult("FAIL");
+						} catch (error) {
+							console.log(error.message)
+						}
+					}
+				}
+			})
+		}
+	
+</script>
+
+</html>

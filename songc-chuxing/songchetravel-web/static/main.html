@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CarShare后台管理</title>
+    <link rel="stylesheet" href="/res/css/base.css">
+    <link rel="stylesheet" href="/res/css/style.css">
+</head>
+
+<body>
+    <div id="js_app">
+        <app-layout v-bind:mini="slide">
+            <!--header-->
+            <div slot="header" v-cloak>
+                <el-row type="flex" class="row-bg" justify="space-between">
+                    <el-col :span=12>
+                        <h2 class="logo">CarShare后台管理</h2>
+                    </el-col>
+                    <el-col :span=12 class="f-tar">
+
+                        <div class="m-head-opt">
+                            欢迎您,{{username}},
+                            <router-link :to="{path:'/sys_user_uptatePwd'}"><a href="javascript:;">修改密码</a></router-link>
+                            <a href="javascript:;" @click="handleLogout()">退出</a>
+                        </div>
+                    </el-col>
+                    <el-row>
+            </div>
+            <!--menu-->
+
+            <div slot="leftmenu">
+                <el-menu default-active="1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" theme="light" :unique-opened="true" v-cloak>
+                    <el-submenu index="1" name="t_1">
+                        <template slot="title"><i class="el-icon-arrow-right"></i>系统管理</template>
+                        <router-link :to="{ path:'/sys/org/toIndex'}" name="t_1-1">
+                            <el-menu-item index="1-1">
+                                部门管理
+                            </el-menu-item>
+                        </router-link>
+                        <router-link :to="{ path: '/sys/role/toIndex'}" name="t_1-2">
+                            <el-menu-item index="1-2">
+                                角色管理
+                            </el-menu-item>
+                        </router-link>
+                        <router-link :to="{ path: '/sys/user/toIndex'}" name="t_1-3">
+                            <el-menu-item index="1-3">
+                                账号管理
+                            </el-menu-item>
+                        </router-link>
+                        <router-link :to="{ path: '/sys/finance/toIndex'}" name="t_1-4">
+                            <el-menu-item index="1-4" class="u-red">
+                                公司账户
+                            </el-menu-item>
+                        </router-link>
+                    </el-submenu>
+                    <el-submenu index="2" name="t_2">
+                        <template slot="title"><i class="el-icon-arrow-right"></i>车辆管理</template>
+                        <router-link :to="{ path: '/car/vehicleModel/toIndex'}" name="t_2-1">
+                            <el-menu-item index="2-1">
+                                车型管理
+                            </el-menu-item>
+                        </router-link>
+                        <router-link :to="{ path: '/car/vehicle/list'}" name="t_2-2">
+                            <el-menu-item index="2-2">
+                                车辆管理
+                            </el-menu-item>
+                        </router-link>
+                        <router-link :to="{ path: '/car/monitor/toMap'}" name="t_2-3">
+                            <el-menu-item index="2-3">
+                                车辆监控
+                            </el-menu-item>
+                        </router-link>
+                        <!-- <router-link :to="{ path: '/car/alarm/toIndex'}" name="t_2-4">
+                            <el-menu-item index="2-4">
+                                <del>报警管理</del>
+                            </el-menu-item>
+                        </router-link> -->
+                        <router-link :to="{ path: '/car/fence/toIndex'}" name="t_2-5">
+                            <el-menu-item index="2-5" class="u-blue">
+                                电子围栏
+                            </el-menu-item>
+                        </router-link>
+                        <router-link :to="{ path: '/car/peccancy/toIndex'}" name="t_2-6">
+                            <el-menu-item index="2-6" class="u-blue">
+                                违章管理
+                            </el-menu-item>
+                        </router-link>
+
+                    </el-submenu>
+                    <el-submenu index="3" name="t_3">
+                        <template slot="title"><i class="el-icon-arrow-right"></i>配置管理</template>
+                        <router-link :to="{ path: '/config/pay/toIndex'}" name="t_3-1">
+                            <el-menu-item index="3-1">
+                                支付宝/微信接口配置
+                            </el-menu-item>
+                        </router-link>
+                        <router-link :to="{ path: '/config/rule/toIndex'}" name="t_3-3">
+                            <el-menu-item index="3-3">
+                                规则管理
+                            </el-menu-item>
+                        </router-link>
+                        <router-link :to="{ path: '/config/other'}" name="t_3-6">
+                            <el-menu-item index="3-6" class="u-blue">
+                                其它配置
+                            </el-menu-item>
+                        </router-link>
+                        <!-- <router-link :to="{ path: '/config/deposit/toIndex'}" name="t_3-4">
+                            <el-menu-item index="3-4">
+                                押金金额配置
+                            </el-menu-item>
+                        </router-link>
+                        <router-link :to="{ path: '/config/customerService/toIndex'}" name="t_3-5">
+                            <el-menu-item index="3-5">
+                                客服电话配置
+                            </el-menu-item>
+                        </router-link>
+                      <router-link :to="{ path: '/temp'}" name="t_3-6">
+                            <el-menu-item index="3-6" class="u-red">
+                                违章配置
+                            </el-menu-item>
+                        </router-link> -->
+                        <!-- <router-link :to="{ path: '/temp'}" name="t_3-7">
+                            <el-menu-item index="3-7" class="u-red">
+                                退款处理时间
+                            </el-menu-item>
+                        </router-link> -->
+                    </el-submenu>
+                    <router-link :to="{ path: '/station/station/toIndex'}" name="t_4">
+                        <el-menu-item index="4">
+                            <i class="el-icon-arrow-right"></i>网点管理
+                        </el-menu-item>
+                    </router-link>
+
+                    <el-submenu index="5" name="t_5">
+                        <template slot="title"><i class="el-icon-arrow-right"></i><span class="u-blue">会员管理</span></template>
+                        <router-link :to="{ path: '/customer/customer/toIndex'}" name="t_5-1">
+                            <el-menu-item index="5-1" class="u-blue">
+                                会员管理
+                            </el-menu-item>
+                        </router-link>
+                        <router-link :to="{ path: '/customer/audit/audit'}" name="t_5-2">
+                            <el-menu-item index="5-2" class="u-blue">
+                                会员审核
+                            </el-menu-item>
+                        </router-link>
+                    </el-submenu>
+
+                    <el-submenu index="6" name="t_6">
+                        <template slot="title"><i class="el-icon-arrow-right"></i><span class="u-red">营销活动</span></template>
+                        <router-link :to="{ path: '/activitity/coupon/toIndex'}" name="t_6-1">
+                            <el-menu-item index="6-1" class="u-red">
+                                优惠券
+                            </el-menu-item>
+                        </router-link>
+                        <router-link :to="{ path: '/activitity/active/toIndex'}" name="t_6-2">
+                            <el-menu-item index="6-2" class="u-red">
+                                活动
+                            </el-menu-item>
+                        </router-link>
+                    </el-submenu>
+
+                    <el-submenu index="7" name="t_7">
+                        <template slot="title"><i class="el-icon-arrow-right"></i><span class="u-red">订单管理</span></template>
+                        <router-link :to="{ path: '/order/order/toIndex'}" name="t_7-1">
+                            <el-menu-item index="7-1" class="u-red">
+                                订单管理
+                            </el-menu-item>
+                        </router-link>
+                        <router-link :to="{ path: '/order/evaluate/toIndex'}" name="t_7-2">
+                            <el-menu-item index="7-2" class="u-red">
+                                评价管理
+                            </el-menu-item>
+                        </router-link>
+                        <router-link :to="{ path: '/order/invoice/toIndex'}" name="t_7-3">
+                            <el-menu-item index="7-3" class="u-red">
+                                发票管理
+                            </el-menu-item>
+                        </router-link>
+                        <router-link :to="{ path: '/order/refund/toIndex'}" name="t_7-4">
+                            <el-menu-item index="7-4" class="u-red">
+                                退款管理
+                            </el-menu-item>
+                        </router-link>
+                    </el-submenu>
+
+                    <el-submenu index="8" name="t_8">
+                        <template slot="title"><i class="el-icon-arrow-right"></i><span class="u-red">财务管理</span></template>
+                        <router-link :to="{ path: '/balance/payments/toIndex'}" name="t_8-1">
+                            <el-menu-item index="8-1" class="u-red">
+                                收支明细
+                            </el-menu-item>
+                        </router-link>
+                    </el-submenu>
+                    <router-link :to="{ path: '/customer/representation/toIndex'}" name="t_9">
+                        <el-menu-item index="9">
+                            <i class="el-icon-arrow-right"></i>故障申述
+                        </el-menu-item>
+                    </router-link>
+                </el-menu>
+            </div>
+            <!--content-->
+            <transition enter-active-class="animated fadeInRight" leave-active-class="animated fadeOut" mode="out-in">
+                <router-view></router-view>
+            </transition>
+        </app-layout>
+    </div>
+    <script src="/res/js/polyfills.js"></script>
+    <script src="/dist/main.js"></script>
+</body>
+
+</html>
