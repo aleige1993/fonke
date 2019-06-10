@@ -1,0 +1,180 @@
+ //覆盖一些element-ui样式
+ .block-checkbox {
+   display: block;
+ }
+
+ .operation-container {
+   .cell {
+     padding: 10px !important;
+   }
+   .el-button {
+     &:nth-child(3) {
+       margin-top: 10px;
+       margin-left: 0px;
+     }
+     &:nth-child(4) {
+       margin-top: 10px;
+     }
+   }
+ }
+
+ .el-upload {
+   input[type="file"] {
+     display: none !important;
+   }
+ }
+
+ .el-upload__input {
+   display: none;
+ }
+
+ .cell {
+   .el-tag {
+     margin-right: 8px;
+   }
+ }
+
+ .small-padding {
+   .cell {
+     padding-left: 8px;
+     padding-right: 8px;
+   }
+ }
+
+ .status-col {
+   .cell {
+     padding: 0 10px;
+     text-align: center;
+     .el-tag {
+       margin-right: 0px;
+     }
+   }
+ } //暂时性解决diolag 问题 https://github.com/ElemeFE/element/issues/2461
+ .el-dialog {
+   transform: none;
+   left: 0;
+   position: relative;
+   margin: 0 auto;
+ } //文章页textarea修改样式
+ .article-textarea {
+   textarea {
+     padding-right: 40px;
+     resize: none;
+     border: none;
+     border-radius: 0px;
+     border-bottom: 1px solid #bfcbd9;
+   }
+ } //element ui upload
+ .upload-container {
+   .el-upload {
+     width: 100%;
+     .el-upload-dragger {
+       width: 100%;
+       height: 200px;
+     }
+   }
+ }
+ .el-menu .el-menu-item:hover,
+ .el-menu .el-submenu__title:hover{
+   color: $primary;
+   background-color: #262933;
+ }
+ .el-menu .el-menu-item:hover span,
+ .el-menu .el-menu-item:hover i,
+ .el-menu .el-submenu__title:hover span,
+ .el-menu .el-submenu__title:hover i{
+   color: $primary;
+ }
+ .el-menu-item,
+ .el-submenu__title {
+   height: 44px;
+   line-height: 44px;
+   font-size: 12px;
+
+ }
+ .el-submenu__icon-arrow {
+   transform: scale(.7);
+   right: 15px;
+   line-height: 18px;
+ }
+ .el-submenu.is-opened > .el-submenu__title .el-submenu__icon-arrow{
+   transform: scale(.7) rotateZ(180deg);
+ }
+ .el-menu--collapse .el-submenu .el-menu-item {
+  padding-left: 0px !important;
+  text-align: center;
+}
+.el-submenu .el-menu-item {
+  height: 34px;
+  line-height: 34px;
+  color: #999;
+  padding: 0 20px;
+  padding-left: 50px !important;
+  padding-right: 0 !important;
+}
+.el-menu .el-submenu .el-menu .el-menu-item:hover{
+  background-color: #262933;
+  color: #3DC3DD;
+}
+.el-menu .el-submenu .el-menu-item.is-active{
+  background-color: #262933;
+}
+.el-menu .el-submenu .el-menu-item.is-active span {
+  color: $primary;
+}
+.menu-wrapper {
+  .el-submenu .el-menu-item {
+    min-width: 100px !important;
+  }
+}
+ // li.el-submenu{
+ //  margin-bottom: 8px;
+ // }
+ .el-message-box{
+  display: block;
+  margin: 60px auto;
+}
+.app-main .app-levelbar.el-breadcrumb{
+  line-height: 40px !important;
+  padding-left: 10px !important;
+  font-size: 12px !important;
+}
+.el-table{
+  font-size: 12px;
+}
+.el-dialog__body{
+  padding: 20px 20px;
+}
+.el-dialog__header{
+  padding-top: 10px;
+  background-color: #f3f3f3;
+  padding-bottom: 15px;
+  button{
+    position: relative;
+    top: 8px;
+  }
+}
+.el-form-item__label{
+  font-size: 12px;
+  font-weight: normal;
+}
+.el-dropdown-menu{
+  border: none;
+  .el-dropdown-menu__item{
+    text-align: center;
+  }
+}
+.el-cascader-menus{
+  border: none;
+}
+
+.el-submenu .el-menu {
+  background-color: #161921;
+}
+.el-submenu__icon-arrow {
+  color: #6F7597;
+}
+
+.el-message-box__status {
+  top: auto;
+}
